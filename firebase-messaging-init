@@ -1,0 +1,38 @@
+// firebase-init.js ve firebase SDK'ları yüklendikten sonra bu dosya çalışmalı
+const messaging = firebase.messaging();
+
+function requestNotificationPermission() {
+  Notification.requestPermission().then((permission) => {
+    if (permission === "granted") {
+      getMessagingToken();
+    } else {
+      alert("Bildirim izni verilmedi!");
+    }
+  });
+}
+
+function getMessagingToken() {
+  messaging.getToken({ vapidKey: "BURAYA_PUBLIC_VAPID_KEY_GELECEK" }) // Biraz önce aldığınız Public Key’i buraya yapıştırın
+    .then((currentToken) => {
+      if (currentToken) {
+        console.log("Token:", currentToken);
+        // Burada token'ı sunucuya göndermek isteyebilirsiniz (isteğe bağlı)
+      } else {
+        console.log("Token alınamadı.");
+      }
+    })
+    .catch((err) => {
+      console.error("Token alınırken hata:", err);
+    });
+}
+
+// Aktifken gelen push bildirimi
+messaging.onMessage((payload) => {
+  console.log("Bildirim alındı: ", payload);
+  if (Notification.permission === "granted") {
+    new Notification(payload.notification.title, {
+      body: payload.notification.body,
+      icon: payload.notification.icon
+    });
+  }
+});
