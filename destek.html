@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Destek & Katkıda Bulunun</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <!-- Özel CSS -->
+  <style>
+    .contribution-card {
+      transition: transform 0.3s, box-shadow 0.3s;
+      border: none;
+      border-radius: 15px;
+    }
+    .contribution-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .hero-section {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      border-radius: 0 0 20px 20px;
+    }
+    .icon-wrapper {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+    }
+    .social-media-bar {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+    .social-btn {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin-bottom: 10px;
+      transition: all 0.3s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .social-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+    }
+    .donate-btn {
+      background-color: #6f42c1;
+      color: white;
+    }
+    .bank-card {
+      border-left: 4px solid #6f42c1;
+    }
+    .copy-iban {
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .copy-iban:hover {
+      background-color: #f8f9fa;
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero Section -->
+  <section class="hero-section text-white py-5 mb-5">
+    <div class="container py-5">
+      <div class="row align-items-center">
+        <div class="col-lg-8">
+          <h1 class="display-4 fw-bold mb-3"><i class="bi bi-heart-fill"></i> Projemize Destek Olun</h1>
+          <p class="lead mb-4">Açık kaynak topluluğunun bir parçası olun, birlikte daha iyisini inşa edelim.</p>
+          <div class="d-flex gap-3">
+            <a href="#contribute" class="btn btn-light btn-lg px-4">
+              <i class="bi bi-code-slash"></i> Katkıda Bulun
+            </a>
+            <a href="#donate" class="btn btn-outline-light btn-lg px-4">
+              <i class="bi bi-gift-fill"></i> Bağış Yap
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-4 d-none d-lg-block">
+          <img src="https://cdn.pixabay.com/photo/2018/05/08/08/44/artificial-intelligence-3382507_640.png" alt="Topluluk" class="img-fluid">
+        </div>
+      </div>
+    </div>
+  </section>
+<section class="container my-5">
+  <h3 class="fw-bold mb-4">Gelişmeler & Duyurular</h3>
+  <div class="row">
+    <!-- Duyurular / Haberler -->
+    <div class="col-lg-7 mb-4 mb-lg-0">
+      <ul class="list-group">
+        <li class="list-group-item">
+          <b>v2.1 güncellemesi yayında!</b> <span class="badge bg-success">Yeni</span>
+          <div class="small text-muted">04 Temmuz 2025</div>
+          <div class="mt-1">Quiz modunda iyileştirmeler ve yeni kelime listeleri eklendi.</div>
+        </li>
+        <li class="list-group-item">
+          10 Temmuz’da topluluk etkinliğimiz var! <span class="badge bg-info text-dark">Etkinlik</span>
+          <div class="small text-muted">01 Temmuz 2025</div>
+          <div class="mt-1">Zoom linki için e-posta listesine abone olmayı unutmayın.</div>
+        </li>
+        <li class="list-group-item">
+          <b>Yeni SSS ve destek sistemi aktif.</b>
+          <div class="small text-muted">30 Haziran 2025</div>
+          <div class="mt-1">Artık destek taleplerinizi hızlıca formla iletebilirsiniz.</div>
+        </li>
+      </ul>
+    </div>
+    <!-- Email Bülteni Kaydı -->
+    <div class="col-lg-5 d-flex flex-column align-items-center justify-content-center">
+      <div class="w-100">
+        <h5 class="mb-3">Gelişmelerden Haberdar Olun</h5>
+        <form action="https://YOUR_MAILCHIMP_OR_NEWSLETTER_URL" method="post" target="_blank" class="row g-2 align-items-center">
+          <div class="col-12">
+            <input type="email" name="EMAIL" class="form-control" placeholder="E-posta adresiniz" required>
+          </div>
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary w-100">Abone Ol</button>
+          </div>
+        </form>
+        <div class="form-text mt-2 text-center">
+          Sadece önemli güncellemeler ve haberler için e-posta gönderilecektir.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="container my-5">
+  <h3 class="fw-bold mb-4">Sürükle-Bırak ile Katkı Yap</h3>
+  <div id="drop-area" class="border border-2 border-primary rounded p-4 text-center" style="background: #f9fbff;">
+    <p class="fs-5 mb-3">Kelime listenizi veya katkı dosyanızı buraya sürükleyin ya da <label for="fileElem" class="btn btn-outline-primary btn-sm m-0">Dosya Seç</label></p>
+    <input type="file" id="fileElem" accept=".json,.txt" style="display:none">
+    <div id="fileList" class="mt-3"></div>
+  </div>
+</section>
+<script>
+  const dropArea = document.getElementById('drop-area');
+  const fileElem = document.getElementById('fileElem');
+  const fileList = document.getElementById('fileList');
+
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropArea.addEventListener(eventName, e => e.preventDefault());
+    dropArea.addEventListener(eventName, e => e.stopPropagation());
+  });
+
+  dropArea.addEventListener('dragover', () => dropArea.classList.add('bg-light'));
+  dropArea.addEventListener('dragleave', () => dropArea.classList.remove('bg-light'));
+  dropArea.addEventListener('drop', handleDrop);
+  fileElem.addEventListener('change', handleFiles);
+
+  dropArea.addEventListener('click', () => fileElem.click());
+
+  function handleDrop(e) {
+    dropArea.classList.remove('bg-light');
+    let dt = e.dataTransfer;
+    let files = dt.files;
+    handleFiles({ target: { files } });
+  }
+
+  function handleFiles(e) {
+    const files = e.target.files;
+    if (!files.length) return;
+    let html = `<b>Yüklenen Dosyalar:</b><ul>`;
+    for (let i = 0; i < files.length; i++) {
+      html += `<li>${files[i].name} (${Math.round(files[i].size/1024)} KB)</li>`;
+    }
+    html += `</ul><span class="text-success">Dosyalar başarıyla alındı! (İnceleme için ekibimize iletilecek.)</span>`;
+    fileList.innerHTML = html;
+  }
+</script>
+  <!-- Katkı Yolları -->
+  <section id="contribute" class="container mb-5">
+    <h2 class="text-center mb-5 fw-bold">Katkıda Bulunma Yolları</h2>
+    
+    <div class="row g-4">
+      <!-- Kart 1 -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card contribution-card h-100 p-4 text-center">
+          <div class="icon-wrapper">
+            <i class="bi bi-github text-primary fs-3"></i>
+          </div>
+          <h3>Kod Katkısı</h3>
+          <p>GitHub üzerinden hata düzeltmeleri yapın veya yeni özellikler ekleyin.</p>
+          <a href="#" class="btn btn-outline-primary mt-auto">GitHub'a Git</a>
+        </div>
+      </div>
+      
+      <!-- Kart 2 -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card contribution-card h-100 p-4 text-center">
+          <div class="icon-wrapper">
+            <i class="bi bi-translate text-success fs-3"></i>
+          </div>
+          <h3>Çeviri</h3>
+          <p>Dökümantasyonu farklı dillere çevirerek projeyi globalleştirin.</p>
+          <a href="#" class="btn btn-outline-success mt-auto">Çeviri Yap</a>
+        </div>
+      </div>
+      
+      <!-- Kart 3 -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card contribution-card h-100 p-4 text-center">
+          <div class="icon-wrapper">
+            <i class="bi bi-file-text text-info fs-3"></i>
+          </div>
+          <h3>Dökümantasyon</h3>
+          <p>Dökümantasyonu geliştirerek kullanıcı deneyimini iyileştirin.</p>
+          <a href="#" class="btn btn-outline-info mt-auto">Katkı Yap</a>
+        </div>
+      </div>
+      
+      <!-- Kart 4 -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card contribution-card h-100 p-4 text-center">
+          <div class="icon-wrapper">
+            <i class="bi bi-megaphone text-warning fs-3"></i>
+          </div>
+          <h3>Yaygınlaştırma</h3>
+          <p>Projeyi sosyal medyada paylaşarak daha fazla kişiye ulaşmasını sağlayın.</p>
+          <a href="#" class="btn btn-outline-warning mt-auto">Paylaş</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bağış Bölümü (Banka Hesap Bilgileri) -->
+  <section id="donate" class="bg-light py-5">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+          <h2 class="fw-bold mb-4">Maddi Destekte Bulunun</h2>
+          <p class="lead">Projenin sürdürülebilirliği için bağışlarınız bize güç verir.</p>
+          <p>Sunucu maliyetleri ve geliştirme araçları için banka hesap bilgilerimiz üzerinden bağış yapabilirsiniz.</p>
+        </div>
+        <div class="col-lg-6">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+              <h4 class="mb-4"><i class="bi bi-bank"></i> Banka Hesap Bilgilerimiz</h4>
+              
+              <!-- Ziraat Bankası -->
+              <div class="card mb-3 bank-card">
+                <div class="card-body">
+                  <div class="d-flex align-items-center mb-2">
+                    <img src="https://logo.clearbit.com/ziraatbank.com.tr" alt="Ziraat Bankası" style="height: 24px; margin-right: 10px;">
+                    <h5 class="mb-0">Ziraat Bankası</h5>
+                  </div>
+                  <div class="mb-2">
+                    <strong>Hesap Sahibi:</strong> Osmanlıca Öğren
+                  </div>
+                  <div class="mb-2">
+                    <strong>Şube:</strong> 1762 - BİLKENT Şube
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <strong class="me-2">IBAN:</strong>
+                    <code class="bg-light p-2 rounded flex-grow-1">TR34 0001 0017 6290 1739 4550 01</code>
+                    <button class="btn btn-sm btn-outline-secondary ms-2 copy-iban" data-iban="TR34 0001 0017 6290 1739 4550 01">
+                      <i class="bi bi-clipboard"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Akbank -->
+              <div class="card mb-3 bank-card">
+                <div class="card-body">
+                  <div class="d-flex align-items-center mb-2">
+                    <img src="https://logo.clearbit.com/akbank.com" alt="Akbank" style="height: 24px; margin-right: 10px;">
+                    <h5 class="mb-0">Akbank</h5>
+                  </div>
+                  <div class="mb-2">
+                    <strong>Hesap Sahibi:</strong> Osmanlıca Öğren
+                  </div>
+                  <div class="mb-2">
+                    <strong>Şube:</strong> 0631 - Gimat Şube
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <strong class="me-2">IBAN:</strong>
+                    <code class="bg-light p-2 rounded flex-grow-1">TR86 0004 6006 3188 8000 1509 54</code>
+                    <button class="btn btn-sm btn-outline-secondary ms-2 copy-iban" data-iban="TR86 0004 6006 3188 8000 1509 54">
+                      <i class="bi bi-clipboard"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4 p-3 bg-primary bg-opacity-10 rounded">
+                <h5><i class="bi bi-stars"></i> Bağışçı Avantajları</h5>
+                <ul class="list-unstyled">
+                  <li><i class="bi bi-check-circle text-success"></i> Özel teşekkür belgesi</li>
+                  <li><i class="bi bi-check-circle text-success"></i> Sponsor listesinde isminiz</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+ <!-- ... önceki kısımlar ... -->
+
+<!-- Topluluk -->
+<section class="container my-5 py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 text-center">
+      <div class="icon-wrapper mb-4 mx-auto">
+        <i class="bi bi-people-fill text-primary fs-3"></i>
+      </div>
+      <!-- GEREKSİZ BAŞLIK KALDIRILDI: <h2 class="fw-bold mb-4">Topluluğa Katılın</h2> -->
+      <p class="lead mb-5">Sorularınızı sorun, fikirlerinizi paylaşın veya diğer katılımcılarla tanışın.</p>
+      <div class="d-flex justify-content-center flex-wrap gap-3">
+        <!-- SADECE GITHUB BAĞLANTISI KALDI -->
+        <a href="https://github.com/ozzasci/Osmanl-ca" class="btn btn-dark px-4" target="_blank" rel="noopener">
+          <i class="bi bi-github"></i> GitHub
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Destek Talep Formu -->
+<section class="container my-5">
+  <h3 class="fw-bold mb-4">Destek Talep Formu</h3>
+  <form id="support-form" class="row g-3" autocomplete="off">
+    <div class="col-md-6">
+      <label for="name" class="form-label">Adınız</label>
+      <input type="text" class="form-control" id="name" required maxlength="40">
+    </div>
+    <div class="col-md-6">
+      <label for="email" class="form-label">E-posta</label>
+      <input type="email" class="form-control" id="email" required maxlength="60">
+    </div>
+    <div class="col-12">
+      <label for="message" class="form-label">Mesajınız</label>
+      <textarea class="form-control" id="message" rows="3" required maxlength="500"></textarea>
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Gönder</button>
+      <span id="form-result" class="ms-3"></span>
+    </div>
+  </form>
+  <script>
+    document.getElementById('support-form').onsubmit = function(e) {
+      e.preventDefault();
+      // Basit demo için
+      document.getElementById('form-result').textContent = 'Mesajınız başarıyla gönderildi. Teşekkürler!';
+      this.reset();
+    };
+  </script>
+</section>
+<!-- Sıkça Sorulan Sorular (SSS) -->
+<section class="container my-5">
+  <h3 class="fw-bold mb-4">Sıkça Sorulan Sorular</h3>
+  <div class="accordion" id="faqAccordion">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="faq1-header">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="true" aria-controls="faq1">
+          Proje açık kaynak mı?
+        </button>
+      </h2>
+      <div id="faq1" class="accordion-collapse collapse show" aria-labelledby="faq1-header" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          Evet, Osmanlıca Öğren tamamen açık kaynak! Katkı için GitHub sayfamıza göz atabilirsiniz.
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="faq2-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">
+          Nasıl destek alabilirim?
+        </button>
+      </h2>
+      <div id="faq2" class="accordion-collapse collapse" aria-labelledby="faq2-header" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          Destek formunu doldurabilir ya da <a href="mailto:ozzasci@gmail.com">ozzasci@gmail.com</a> adresine e-posta gönderebilirsiniz.
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="faq3-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" aria-expanded="false" aria-controls="faq3">
+          Katkıda bulununca bana ne avantaj sağlanır?
+        </button>
+      </h2>
+      <div id="faq3" class="accordion-collapse collapse" aria-labelledby="faq3-header" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          Katkıda bulunanlara özel rozet ve teşekkür belgesi sunulmaktadır. Ayrıca adınız GitHub sayfamızda listelenir.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ... sonraki kısımlar ... -->
+
+  <!-- Küçük Sosyal Medya ve Bağış Çubuğu (Sağ Altta) -->
+  <div class="social-media-bar">
+    <!-- WhatsApp -->
+    <a href="https://wa.me/905309082276" 
+       class="social-btn btn btn-success"
+       data-bs-toggle="tooltip" title="WhatsApp">
+      <i class="bi bi-whatsapp"></i>
+    </a>
+    
+    <!-- Telegram -->
+    <a href="https://t.me/Ozzasci" 
+       class="social-btn btn btn-primary"
+       data-bs-toggle="tooltip" title="Telegram">
+      <i class="bi bi-telegram"></i>
+    </a>
+    
+    <!-- E-mail -->
+    <a href="mailto:ozzasci@gmal.com" 
+       class="social-btn btn btn-danger"
+       data-bs-toggle="tooltip" title="E-mail">
+      <i class="bi bi-envelope-fill"></i>
+    </a>
+    
+    <!-- Bağış Butonu -->
+    <a href="#donate" 
+       class="social-btn btn donate-btn"
+       data-bs-toggle="tooltip" title="Bağış Yap">
+      <i class="bi bi-gift-fill"></i>
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h5><i class="bi bi-heart-fill text-danger"></i> Teşekkürler</h5>
+          <p>Her katkınız projemizi daha iyi hale getiriyor.</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <p class="mb-0">© 2025 Osmanlıca Öğren | Tüm Hakları Saklıdır.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Ana Sayfaya Dön Butonu -->
+  <div class="position-fixed bottom-0 start-0 m-4">
+    <a href="index.html" class="btn btn-primary btn-lg rounded-circle shadow" 
+       data-bs-toggle="tooltip" title="Ana Sayfaya Dön">
+      <i class="bi bi-house-door-fill fs-4"></i>
+    </a>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Tooltip aktivasyonu
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+    // IBAN kopyalama işlevi
+    document.querySelectorAll('.copy-iban').forEach(button => {
+      button.addEventListener('click', function() {
+        const iban = this.getAttribute('data-iban')
+        navigator.clipboard.writeText(iban)
+          .then(() => {
+            const originalIcon = this.innerHTML
+            this.innerHTML = '<i class="bi bi-check"></i>'
+            setTimeout(() => {
+              this.innerHTML = originalIcon
+            }, 2000)
+          })
+      })
+    })
+  </script>
+</body>
+</html>

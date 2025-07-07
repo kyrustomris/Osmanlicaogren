@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Osmanlıca Quiz Premium</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body { background: #fffbe8; }
+        body.dark-theme {
+            background: #1a1a1a;
+            color: #f0f0f0;
+        }
+        .premium-hero {
+            background: linear-gradient(90deg, #ffe259 0%, #ffa751 100%);
+            border-radius: 18px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 24px #ffc10733;
+        }
+        .dark-theme .premium-hero {
+            background: linear-gradient(90deg, #3a2a00 0%, #5a3a00 100%);
+        }
+        .list-group-item i { margin-right: 7px; }
+        .price-card {
+            background: #fff3cd;
+            border: 2px solid #ffe082;
+            border-radius: 12px;
+        }
+        .dark-theme .price-card {
+            background: #2d2d2d;
+            border-color: #5a4a00;
+        }
+        .price-card .btn { font-size: 1.2rem; font-weight: bold; }
+        .premium-table th, .premium-table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+        .faq-question { font-weight: bold; }
+        .refer-banner {
+            background: #fffde7;
+            border: 2px dashed #ffe082;
+            padding: 18px 24px;
+            border-radius: 14px;
+            text-align: center;
+            margin: 2rem 0 1.3rem 0;
+        }
+        .dark-theme .refer-banner {
+            background: #252525;
+            border-color: #5a4a00;
+        }
+        .premium-feature {
+            background: #fffde7;
+            border-left: 5px solid #ffd700;
+            border-radius: 7px;
+            padding: 14px 18px;
+            margin-bottom: 13px;
+            font-size: 1.12rem;
+        }
+        .dark-theme .premium-feature {
+            background: #252525;
+            border-left-color: #ffd700;
+        }
+        .dark-theme .card,
+        .dark-theme .list-group-item,
+        .dark-theme .table {
+            background-color: #2d2d2d;
+            color: #f0f0f0;
+        }
+        .dark-theme .table {
+            border-color: #444;
+        }
+        .dark-theme .text-muted {
+            color: #aaa !important;
+        }
+        .dark-theme .modal-content {
+            background-color: #2d2d2d;
+            color: #f0f0f0;
+        }
+        .dark-theme .form-control,
+        .dark-theme .form-select {
+            background-color: #333;
+            color: #fff;
+            border-color: #555;
+        }
+        .subscription-badge {
+            font-size: 0.9rem;
+            padding: 0.35rem 0.65rem;
+        }
+        .cancelled-status {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .expired-status {
+            color: #6c757d;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body class="light-theme">
+    <div class="container py-5">
+        <!-- Theme Toggle -->
+        <div class="text-end mb-3">
+            <button class="btn btn-sm btn-outline-secondary theme-btn active" data-theme="light">
+                <i class="bi bi-sun"></i> Açık
+            </button>
+            <button class="btn btn-sm btn-outline-secondary theme-btn" data-theme="dark">
+                <i class="bi bi-moon"></i> Koyu
+            </button>
+        </div>
+
+        <!-- Hero alanı -->
+        <div class="premium-hero text-center py-5 shadow-sm">
+            <h2 class="mb-2" style="font-weight:800;">Osmanlıca Quiz <span style="color:#ffab00;">Premium</span></h2>
+            <p class="lead mb-0">Bir üst seviyeye geç! Premium üyelikle tüm avantajları keşfet.</p>
+            <div class="mt-3 d-flex justify-content-center flex-wrap gap-3">
+                <div class="premium-feature"><i class="bi bi-stars text-warning"></i> Sınırsız Quiz ve Tekrar</div>
+                <div class="premium-feature"><i class="bi bi-graph-up-arrow text-primary"></i> Gelişmiş İstatistikler</div>
+                <div class="premium-feature"><i class="bi bi-gem text-info"></i> Özel Modlar & Görevler</div>
+                <div class="premium-feature"><i class="bi bi-shield-check text-success"></i> Reklamsız Deneyim</div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Avantajlar -->
+            <div class="col-lg-8 mb-4">
+                <ul class="list-group shadow">
+                    <li class="list-group-item"><i class="bi bi-check2-circle text-success"></i> Reklamsız ve hızlı kullanım</li>
+                    <li class="list-group-item"><i class="bi bi-check2-circle text-success"></i> Premium rozetleri ve altın avatar çerçeveleri</li>
+                    <li class="list-group-item"><i class="bi bi-rocket-takeoff text-primary"></i> Ekstra Quiz Modları: <b>Maraton, Zorluk Seçme ve Günlük Meydan Okuma!</b></li>
+                    <li class="list-group-item"><i class="bi bi-check2-circle text-success"></i> Gelişmiş istatistik analizleri ve grafikler</li>
+                    <li class="list-group-item"><i class="bi bi-check2-circle text-success"></i> Haftalık/aylık başarı raporu ve gelişim takibi</li>
+                    <li class="list-group-item"><i class="bi bi-check2-circle text-success"></i> Premium'a özel görevler ve başarımlar</li>
+                    <li class="list-group-item"><i class="bi bi-check2-circle text-success"></i> Öncelikli destek & erken erişim</li>
+                    <li class="list-group-item"><i class="bi bi-gift text-danger"></i> <b>Hediye Premium:</b> Arkadaşına 1 ay premium üyelik hediye et!</li>
+                </ul>
+            </div>
+            <!-- Fiyat kutusu -->
+            <div class="col-lg-4 mb-4">
+                <div class="card price-card shadow text-center py-4">
+                    <div class="card-body">
+                        <h3 class="mb-2">Aylık <span style="color:#ffb300;">₺24,99</span></h3>
+                        <p class="mb-3 text-muted">7 gün ücretsiz deneme!</p>
+                        <button class="btn btn-warning btn-lg w-100 mb-2" id="premiumButton" data-bs-toggle="modal" data-bs-target="#premiumModal">
+                            <i class="bi bi-star-fill"></i> <span id="premiumButtonText">Premium'a Geç</span>
+                        </button>
+                        <small class="d-block mt-2 text-muted">Dilediğin zaman iptal edebilirsin.</small>
+                        <div id="subscriptionManagement" class="mt-3"></div>
+                        <a href="index.html" class="btn btn-outline-secondary w-100 mt-3">
+                            <i class="bi bi-house"></i> Ana Sayfa'ya Dön
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Referans ve hediye kampanyası -->
+        <div class="refer-banner bg-light border border-warning my-3 p-3 rounded">
+            <h5>
+                <i class="bi bi-gift text-danger"></i> <span class="fw-bold">Hediye Premium Özelliği Geldi!</span>
+            </h5>
+            <p>
+                Premium üyelik satın alırken bir arkadaşına <b>1 ay ücretsiz Premium</b> hediye edebilirsin.<br>
+                <span class="text-success">
+                    <i class="bi bi-trophy-fill"></i>
+                    Kampanya: Her davet edilen arkadaş için ekstra <b>1 hafta Premium</b> senin!
+                </span>
+            </p>
+            <div>
+                <input type="text" class="form-control d-inline w-auto" style="max-width:200px;display:inline-block;" value="ozzasci2025" readonly>
+                <button class="btn btn-sm btn-outline-primary ms-2" onclick="navigator.clipboard.writeText('ozzasci2025');this.innerText='Kopyalandı!';">Referans Kodunu Kopyala</button>
+            </div>
+            <a href="#" class="btn btn-outline-success btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#hediyePremiumModal">
+                <i class="bi bi-gift"></i> Arkadaşına Premium Hediye Et
+            </a>
+        </div>
+
+        <!-- Kampanya bildirimi -->
+        <div class="alert alert-warning mt-4">
+            <i class="bi bi-stars"></i>
+            <strong>Ödül ve Kampanya:</strong> Şu anda Premium alanlara <b>özel rozet</b> ve <b>ekstra quiz modları</b> hediye!
+        </div>
+
+        <!-- Premium Üyelik Modalı -->
+        <div class="modal fade" id="premiumModal" tabindex="-1" aria-labelledby="premiumModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="premiumModalLabel"><i class="bi bi-star-fill text-warning"></i> Premium Üyelik</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> 7 gün ücretsiz deneme ile başlayın. İstediğiniz zaman iptal edebilirsiniz.
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Ödeme Yöntemi</label>
+                            <select class="form-select">
+                                <option>Kredi/Banka Kartı</option>
+                                <option>Mobil Ödeme</option>
+                                <option>PayPal</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                            <label class="form-check-label" for="termsCheck">
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Hüküm ve Koşulları</a> kabul ediyorum.
+                            </label>
+                        </div>
+                        
+                        <div id="premiumAlert" class="alert" style="display:none;"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="confirmPremium">₺24,99 ile Başla</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">İptal</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hediye Premium Modal -->
+        <div class="modal fade" id="hediyePremiumModal" tabindex="-1" aria-labelledby="hediyePremiumModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="hediyePremiumForm">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="hediyePremiumModalLabel"><i class="bi bi-gift"></i> Premium Hediye Et</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="arkadasEmail" class="form-label">Arkadaşının E-Postası</label>
+                                <input type="email" class="form-control" id="arkadasEmail" placeholder="mail@example.com" required>
+                                <div class="form-text">Arkadaşına 1 ay ücretsiz Premium üyelik gönder!</div>
+                            </div>
+                            <div id="hediyePremiumAlert" class="alert" style="display:none;"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Gönder</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Abonelik Yönetimi Modalı -->
+        <div class="modal fade" id="subscriptionModal" tabindex="-1" aria-labelledby="subscriptionModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="subscriptionModalLabel"><i class="bi bi-credit-card"></i> Abonelik Yönetimi</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="subscriptionStatus">
+                            <h5 class="mb-3">Abonelik Durumu: 
+                                <span id="statusText" class="badge subscription-badge">Aktif</span>
+                                <span id="cancelledText" class="cancelled-status" style="display:none;">(Sonlandırılacak)</span>
+                                <span id="expiredText" class="expired-status" style="display:none;">(Sona Erdi)</span>
+                            </h5>
+                            <p>Son yenileme tarihi: <span id="renewalDate">01 Ağustos 2023</span></p>
+                            <p>Bir sonraki ödeme tarihi: <span id="nextPaymentDate">01 Eylül 2023</span></p>
+                            <p id="validUntilText" style="display:none;">Premium erişim sonu: <span id="validUntil">01 Eylül 2023</span></p>
+                        </div>
+                        <div class="alert alert-warning mt-3" id="subscriptionWarning">
+                            <i class="bi bi-exclamation-triangle"></i> Aboneliğinizi iptal ederseniz, premium özelliklere erişiminiz ödeme döneminin sonuna kadar devam eder.
+                        </div>
+                        <div id="subscriptionAlert" class="alert" style="display:none;"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" id="cancelSubscription">Aboneliği İptal Et</button>
+                        <button type="button" class="btn btn-success" id="reactivateSubscription" style="display:none;">Aboneliği Yeniden Aktif Et</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hüküm ve Koşullar Modalı -->
+        <div class="modal fade" id="termsModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Hüküm ve Koşullar</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h5>Premium Üyelik Koşulları</h5>
+                        <p>1. Premium üyelik aylık otomatik yenilenen bir aboneliktir.</p>
+                        <p>2. Ücretsiz deneme süresi 7 gündür ve bu süre içinde iptal ederseniz ücret alınmaz.</p>
+                        <p>3. Aboneliğinizi istediğiniz zaman iptal edebilirsiniz.</p>
+                        <p>4. Ödemeler güvenli ödeme sistemleri üzerinden işlenir.</p>
+                        <h5 class="mt-4">Abonelik İptali</h5>
+                        <p>1. Aboneliğinizi "Abonelik Yönetimi" bölümünden iptal edebilirsiniz.</p>
+                        <p>2. İptal işlemi sonraki ödeme döneminden itibaren geçerli olur.</p>
+                        <p>3. İptal etseniz bile ödediğiniz dönemin sonuna kadar premium özelliklerden faydalanmaya devam edersiniz.</p>
+                        <p>4. Aboneliğiniz sona erdikten sonra tekrar premium üye olabilirsiniz.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kıyas Tablosu -->
+        <hr class="my-4">
+        <div class="mb-4">
+            <h4>Kıyas Tablosu</h4>
+            <table class="table table-bordered premium-table">
+                <thead class="table-light">
+                    <tr><th>Özellik</th><th>Ücretsiz</th><th>Premium</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Reklamsız Deneyim</td><td>❌</td><td>✔️</td></tr>
+                    <tr><td>Ekstra Quiz Modları</td><td>❌</td><td>✔️</td></tr>
+                    <tr><td>Gelişmiş İstatistik</td><td>❌</td><td>✔️</td></tr>
+                    <tr><td>Premium Rozetler</td><td>❌</td><td>✔️</td></tr>
+                    <tr><td>Standart Görevler</td><td>✔️</td><td>✔️</td></tr>
+                    <tr><td>Altın Çerçeve</td><td>❌</td><td>✔️</td></tr>
+                    <tr><td>Arkadaşına Hediye</td><td>❌</td><td>✔️</td></tr>
+                    <tr><td>Öncelikli Destek</td><td>❌</td><td>✔️</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SSS -->
+        <div class="mt-4">
+            <h4>Sık Sorulan Sorular</h4>
+            <div class="mb-2">
+                <span class="faq-question">Premium'u istediğim zaman iptal edebilir miyim?</span><br>
+                Evet, aboneliğinizi "Abonelik Yönetimi" bölümünden istediğiniz zaman iptal edebilirsiniz. İptal ettiğinizde kalan süreniz boyunca avantajlarınız devam eder.
+            </div>
+            <div class="mb-2">
+                <span class="faq-question">Aboneliği iptal ettikten sonra ne olur?</span><br>
+                Aboneliğinizi iptal etseniz bile, ödediğiniz dönemin sonuna kadar premium özelliklerden faydalanmaya devam edersiniz. Sonrasında otomatik olarak ücretsiz hesaba dönüş yapılır.
+            </div>
+            <div class="mb-2">
+                <span class="faq-question">Abonelik sona erdikten sonra tekrar premium alabilir miyim?</span><br>
+                Evet, aboneliğiniz sona erdikten sonra istediğiniz zaman tekrar premium üye olabilirsiniz. Tüm premium özelliklerine yeniden erişim sağlayabilirsiniz.
+            </div>
+            <div class="mb-2">
+                <span class="faq-question">Ödemeler güvenli mi?</span><br>
+                Evet, tüm ödemeler 256-bit SSL ile şifrelenir ve güvenli ödeme altyapısı kullanılır.
+            </div>
+            <div class="mb-2">
+                <span class="faq-question">7 gün ücretsiz deneme nasıl işliyor?</span><br>
+                Üyeliğinizi başlattığınızda ilk 7 gün ücret yansıtılmaz. Memnun kalmazsanız bu süre içinde iptal edebilirsiniz.
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS ve Modal için ek JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Tema değiştirme
+        const setTheme = (theme) => {
+            document.body.classList.remove('light-theme', 'dark-theme');
+            document.body.classList.add(`${theme}-theme`);
+            localStorage.setItem('osmanlicaTheme', theme);
+            
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === theme);
+            });
+        };
+
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                setTheme(btn.dataset.theme);
+            });
+        });
+
+        // Başlangıç temasını ayarla
+        const savedTheme = localStorage.getItem('osmanlicaTheme') || 'light';
+        setTheme(savedTheme);
+
+        // Hediye Premium Formu
+        document.getElementById('hediyePremiumForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('arkadasEmail').value.trim();
+            const alertBox = document.getElementById('hediyePremiumAlert');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailRegex.test(email)) {
+                alertBox.style.display = 'block';
+                alertBox.className = 'alert alert-danger';
+                alertBox.innerHTML = '<i class="bi bi-exclamation-triangle"></i> Lütfen geçerli bir e-posta adresi giriniz!';
+                return;
+            }
+
+            // Başarı mesajı göster
+            alertBox.style.display = 'block';
+            alertBox.className = 'alert alert-success';
+            alertBox.innerHTML = `<i class="bi bi-check-circle"></i> Hediye Premium başarıyla gönderildi! ${email} adresine bir davet maili yolladık.`;
+
+            // Formu resetle ve modalı kapat
+            setTimeout(() => {
+                bootstrap.Modal.getInstance(document.getElementById('hediyePremiumModal')).hide();
+                this.reset();
+                alertBox.style.display = 'none';
+            }, 2000);
+        });
+
+        // Premium üyelik işlemleri
+        document.getElementById('confirmPremium').addEventListener('click', function() {
+            if (!document.getElementById('termsCheck').checked) {
+                const alertBox = document.getElementById('premiumAlert');
+                alertBox.style.display = 'block';
+                alertBox.className = 'alert alert-danger';
+                alertBox.innerHTML = '<i class="bi bi-exclamation-triangle"></i> Lütfen hüküm ve koşulları kabul ediniz!';
+                return;
+            }
+
+            // Premium aktif et
+            const alertBox = document.getElementById('premiumAlert');
+            alertBox.style.display = 'block';
+            alertBox.className = 'alert alert-success';
+            alertBox.innerHTML = '<i class="bi bi-check-circle"></i> Premium üyeliğiniz başarıyla başlatıldı! Yönlendiriliyorsunuz...';
+
+            // Butonu devre dışı bırak
+            this.disabled = true;
+
+            // Premium durumunu kaydet ve butonu güncelle
+            setTimeout(() => {
+                const now = new Date();
+                const renewalDate = new Date();
+                renewalDate.setMonth(renewalDate.getMonth() + 1);
+                
+                localStorage.setItem('osmanlicaPremium', 'true');
+                localStorage.setItem('subscriptionStartDate', now.toISOString());
+                localStorage.setItem('subscriptionRenewalDate', renewalDate.toISOString());
+                localStorage.removeItem('subscriptionCancelled');
+                localStorage.removeItem('subscriptionExpired');
+                
+                updatePremiumStatus();
+                bootstrap.Modal.getInstance(document.getElementById('premiumModal')).hide();
+                alert("Premium üyeliğiniz aktif edildi! Artık tüm premium özelliklere erişebilirsiniz.");
+            }, 1500);
+        });
+
+        // Aboneliği iptal et
+        document.getElementById('cancelSubscription').addEventListener('click', function() {
+            const alertBox = document.getElementById('subscriptionAlert');
+            alertBox.style.display = 'block';
+            alertBox.className = 'alert alert-info';
+            alertBox.innerHTML = '<i class="bi bi-info-circle"></i> Aboneliğiniz iptal ediliyor...';
+            
+            setTimeout(() => {
+                const renewalDate = new Date(localStorage.getItem('subscriptionRenewalDate'));
+                localStorage.setItem('subscriptionCancelled', 'true');
+                localStorage.setItem('validUntilDate', renewalDate.toISOString());
+                
+                alertBox.className = 'alert alert-success';
+                alertBox.innerHTML = '<i class="bi bi-check-circle"></i> Aboneliğiniz başarıyla iptal edildi!';
+                
+                updatePremiumStatus();
+                
+                // 2 sn sonra modalı kapat
+                setTimeout(() => {
+                    bootstrap.Modal.getInstance(document.getElementById('subscriptionModal')).hide();
+                }, 2000);
+            }, 1500);
+        });
+
+        // Aboneliği yeniden aktif et
+        document.getElementById('reactivateSubscription').addEventListener('click', function() {
+            const alertBox = document.getElementById('subscriptionAlert');
+            alertBox.style.display = 'block';
+            alertBox.className = 'alert alert-info';
+            alertBox.innerHTML = '<i class="bi bi-info-circle"></i> Aboneliğiniz yeniden aktif ediliyor...';
+            
+            setTimeout(() => {
+                const now = new Date();
+                const renewalDate = new Date();
+                renewalDate.setMonth(renewalDate.getMonth() + 1);
+                
+                localStorage.setItem('osmanlicaPremium', 'true');
+                localStorage.setItem('subscriptionRenewalDate', renewalDate.toISOString());
+                localStorage.removeItem('subscriptionCancelled');
+                localStorage.removeItem('subscriptionExpired');
+                localStorage.removeItem('validUntilDate');
+                
+                alertBox.className = 'alert alert-success';
+                alertBox.innerHTML = '<i class="bi bi-check-circle"></i> Aboneliğiniz yeniden aktif edildi!';
+                
+                updatePremiumStatus();
+                
+                // 2 sn sonra modalı kapat
+                setTimeout(() => {
+                    bootstrap.Modal.getInstance(document.getElementById('subscriptionModal')).hide();
+                }, 2000);
+            }, 1500);
+        });
+
+        // Premium durumunu güncelleme fonksiyonu
+        const updatePremiumStatus = () => {
+            const isPremium = localStorage.getItem('osmanlicaPremium') === 'true';
+            const isCancelled = localStorage.getItem('subscriptionCancelled') === 'true';
+            const isExpired = localStorage.getItem('subscriptionExpired') === 'true';
+            const premiumButton = document.getElementById('premiumButton');
+            const premiumButtonText = document.getElementById('premiumButtonText');
+            const subscriptionManagement = document.getElementById('subscriptionManagement');
+            
+            // Premium butonunu güncelle
+            if (isPremium && !isExpired) {
+                premiumButtonText.textContent = 'Premium Aktif';
+                premiumButton.classList.remove('btn-warning');
+                premiumButton.classList.add('btn-success');
+                premiumButton.disabled = true;
+                
+                // Abonelik yönetimi butonunu ekle
+                subscriptionManagement.innerHTML = '';
+                const manageBtn = document.createElement('button');
+                manageBtn.className = 'btn btn-outline-info w-100';
+                manageBtn.innerHTML = '<i class="bi bi-credit-card"></i> Aboneliği Yönet';
+                manageBtn.setAttribute('data-bs-toggle', 'modal');
+                manageBtn.setAttribute('data-bs-target', '#subscriptionModal');
+                subscriptionManagement.appendChild(manageBtn);
+            } else {
+                premiumButtonText.textContent = 'Premium\'a Geç';
+                premiumButton.classList.add('btn-warning');
+                premiumButton.classList.remove('btn-success', 'disabled');
+                premiumButton.disabled = false;
+                subscriptionManagement.innerHTML = '';
+            }
+            
+            // Abonelik durumunu güncelle
+            updateSubscriptionStatus();
+        };
+        
+        // Abonelik durumunu güncelle
+        const updateSubscriptionStatus = () => {
+            const isPremium = localStorage.getItem('osmanlicaPremium') === 'true';
+            const isCancelled = localStorage.getItem('subscriptionCancelled') === 'true';
+            const renewalDate = new Date(localStorage.getItem('subscriptionRenewalDate') || new Date());
+            const nextPaymentDate = new Date(renewalDate);
+            nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 1);
+            const validUntilDate = localStorage.getItem('validUntilDate') ? new Date(localStorage.getItem('validUntilDate')) : null;
+            const now = new Date();
+            
+            // Tarih formatlama
+            const formatDate = (date) => {
+                return date.toLocaleDateString('tr-TR', {
+                    day: 'numeric', month: 'long', year: 'numeric'
+                });
+            };
+            
+            // Tarihleri güncelle
+            document.getElementById('renewalDate').textContent = formatDate(renewalDate);
+            document.getElementById('nextPaymentDate').textContent = formatDate(nextPaymentDate);
+            
+            if (validUntilDate) {
+                document.getElementById('validUntil').textContent = formatDate(validUntilDate);
+                document.getElementById('validUntilText').style.display = 'block';
+            } else {
+                document.getElementById('validUntilText').style.display = 'none';
+            }
+            
+            // Abonelik durumunu kontrol et
+            if (!isPremium) {
+                document.getElementById('statusText').textContent = 'Aktif Değil';
+                document.getElementById('statusText').className = 'badge bg-secondary subscription-badge';
+                document.getElementById('cancelledText').style.display = 'none';
+                document.getElementById('expiredText').style.display = 'none';
+                document.getElementById('cancelSubscription').style.display = 'none';
+                document.getElementById('reactivateSubscription').style.display = 'inline-block';
+                document.getElementById('subscriptionWarning').style.display = 'none';
+            } 
+            else if (isCancelled) {
+                document.getElementById('statusText').textContent = 'Aktif';
+                document.getElementById('statusText').className = 'badge bg-warning subscription-badge';
+                document.getElementById('cancelledText').style.display = 'inline';
+                document.getElementById('expiredText').style.display = 'none';
+                document.getElementById('cancelSubscription').style.display = 'none';
+                document.getElementById('reactivateSubscription').style.display = 'inline-block';
+                document.getElementById('subscriptionWarning').style.display = 'block';
+                
+                // Premium erişim süresi doldu mu kontrol et
+                if (validUntilDate && now > validUntilDate) {
+                    localStorage.setItem('subscriptionExpired', 'true');
+                    localStorage.removeItem('osmanlicaPremium');
+                    document.getElementById('statusText').textContent = 'Sona Erdi';
+                    document.getElementById('statusText').className = 'badge bg-secondary subscription-badge';
+                    document.getElementById('cancelledText').style.display = 'none';
+                    document.getElementById('expiredText').style.display = 'inline';
+                    document.getElementById('reactivateSubscription').style.display = 'none';
+                    updatePremiumStatus();
+                }
+            } 
+            else {
+                document.getElementById('statusText').textContent = 'Aktif';
+                document.getElementById('statusText').className = 'badge bg-success subscription-badge';
+                document.getElementById('cancelledText').style.display = 'none';
+                document.getElementById('expiredText').style.display = 'none';
+                document.getElementById('cancelSubscription').style.display = 'inline-block';
+                document.getElementById('reactivateSubscription').style.display = 'none';
+                document.getElementById('subscriptionWarning').style.display = 'block';
+            }
+        };
+
+        // Sayfa yüklendiğinde premium durumunu kontrol et
+        updatePremiumStatus();
+
+        // Modal kapatıldığında formları resetle
+        document.getElementById('premiumModal').addEventListener('hidden.bs.modal', () => {
+            document.getElementById('premiumAlert').style.display = 'none';
+            document.getElementById('termsCheck').checked = false;
+            document.getElementById('confirmPremium').disabled = false;
+        });
+
+        document.getElementById('hediyePremiumModal').addEventListener('hidden.bs.modal', () => {
+            document.getElementById('hediyePremiumAlert').style.display = 'none';
+            document.getElementById('hediyePremiumForm').reset();
+        });
+
+        document.getElementById('subscriptionModal').addEventListener('hidden.bs.modal', () => {
+            document.getElementById('subscriptionAlert').style.display = 'none';
+        });
+    });
+    </script>
+</body>
+</html>

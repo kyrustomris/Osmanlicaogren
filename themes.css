@@ -1,0 +1,57 @@
+/* Light Theme (Varsayılan) */
+.light-theme {
+    --bg-color: #f8f9fa;
+    --text-color: #212529;
+    --card-bg: #ffffff;
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --osmanlica-color: #8B4513;
+    --transliteration-color: #D2691E;
+    --meaning-color: #2E8B57;
+    --correct-color: #28a745;
+    --incorrect-color: #dc3545;
+    --counter-bg: #e8f4f8;
+    --counter-border: #3498db;
+    --upload-area-bg: #fef6e4;
+    --upload-area-border: #f3d2c1;
+}
+
+/* Dark Theme */
+.dark-theme {
+    --bg-color: #212529;
+    --text-color: #f8f9fa;
+    --card-bg: #2c3e50;
+    --primary-color: #3498db;
+    --secondary-color: #adb5bd;
+    --osmanlica-color: #E6B17E;
+    --transliteration-color: #D2B48C;
+    --meaning-color: #8FBC8F;
+    --correct-color: #2ecc71;
+    --incorrect-color: #e74c3c;
+    --counter-bg: #2c3e50;
+    --counter-border: #2980b9;
+    --upload-area-bg: #34495e;
+    --upload-area-border: #7f8c8d;
+}
+
+/* Ottoman Theme */
+.ottoman-theme {
+    --bg-color: #f5f5dc;
+    --text-color: #5a3921;
+    --card-bg: #e6d3a3;
+    --primary-color: #8b4513;
+    --secondary-color: #a0522d;
+    --osmanlica-color: #5D4037;
+    --transliteration-color: #8D6E63;
+    --meaning-color: #689F38;
+    --correct-color: #4CAF50;
+    --incorrect-color: #F44336;
+    --counter-bg: #e6d3a3;
+    --counter-border: #a0522d;
+    --upload-area-bg: #d4b483;
+    --upload-area-border: #8b4513;
+}
+ /* Arka plan deseni */
+    background-image: url('https://i.imgur.com/Q3ZQJ9a.png');
+    background-attachment: fixed;
+}

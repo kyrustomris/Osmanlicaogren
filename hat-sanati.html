@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profesyonel Hat Sanatı Uygulaması</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Lateef:wght@400;700&family=Scheherazade+New:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --hat-bg: #f8f4e8;
+            --hat-border: #8B4513;
+            --primary-color: #5e3a1f;
+        }
+        body {
+            background-color: #f5f5f5;
+            font-family: 'Noto Sans', sans-serif;
+        }
+        .hat-sulus {
+            font-family: 'Amiri', serif;
+            font-weight: 700;
+            font-size: 2.4rem;
+            line-height: 3.8;
+            letter-spacing: 1px;
+        }
+        .hat-nesih {
+            font-family: 'Lateef', serif;
+            font-weight: 400;
+            font-size: 2.6rem;
+            line-height: 3.2;
+        }
+        .hat-talik {
+            font-family: 'Scheherazade New', serif;
+            font-weight: 700;
+            font-size: 2.5rem;
+            line-height: 3.5;
+            font-style: italic;
+            transform: skewX(-5deg);
+        }
+        .hat-divani {
+            font-family: 'Noto Naskh Arabic', serif;
+            font-weight: 700;
+            font-size: 2.2rem;
+            letter-spacing: 3px;
+            text-decoration: underline;
+        }
+        .mobile-friendly-area {
+            min-height: 180px;
+            border: 2px dashed var(--hat-border, #8B4513);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            background-color: var(--hat-bg, #f8f4e8);
+            direction: rtl;
+            text-align: right;
+            font-size: 2rem;
+            word-break: break-word;
+            overflow-x: auto;
+        }
+        .toolbar {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .script-info {
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            background-color: white;
+            height: 100%;
+        }
+        .script-info:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border-color: var(--primary-color);
+        }
+        .script-info.active {
+            border: 2px solid var(--primary-color);
+            background-color: #fff9e6;
+        }
+        .script-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--hat-border);
+            padding-bottom: 8px;
+        }
+        .script-desc {
+            font-size: 0.95rem;
+            color: #555;
+        }
+        .btn-hat {
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            margin: 0 5px;
+        }
+        .hat-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            padding: 20px;
+        }
+        /* Canvas mobil uyumu */
+        .canvas-wrapper {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            margin: 20px 0;
+            text-align: center;
+        }
+        #drawArea {
+            display: block;
+            margin: 0 auto;
+            background: #f8f4e8;
+            border-radius: 12px;
+            border: 2px solid #8B4513;
+            touch-action: none;
+            width: 100%;
+            max-width: 800px;
+            height: 220px;
+        }
+        .canvas-controls {
+            margin-top: 10px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .color-picker,
+        .size-picker {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            margin: 0 4px;
+            border: 1px solid #ccc;
+            vertical-align: middle;
+        }
+        .picker-label {
+            font-size: 0.95rem;
+            margin-right: 8px;
+        }
+        /* Mobil uyum */
+        @media (max-width: 600px) {
+            .mobile-friendly-area {
+                font-size: 1.1rem;
+                padding: 10px;
+                min-height: 120px;
+            }
+            #drawArea {
+                height: 130px;
+                max-width: 100vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <h1 class="text-center hat-title my-4">
+            <i class="bi bi-pen-fill"></i> Profesyonel Hat Sanatı Pratik Alanı
+        </h1>
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card border-0 shadow-lg">
+                    <div class="card-body p-4">
+                        <!-- Yazı Stilleri -->
+                        <div class="toolbar">
+                            <h4 class="mb-3">Hat Yazı Stilleri:</h4>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="script-info active" onclick="setScriptStyle('nesih')" data-style="nesih">
+                                        <h4 class="script-title">Nesih Yazı</h4>
+                                        <p class="script-desc">
+                                            <strong>Özellikler:</strong> Okunaklı ve düz hatlar, Kur'an-ı Kerim'lerde yaygın<br>
+                                            <strong>Tarihçe:</strong> 10. yüzyılda geliştirildi<br>
+                                            <strong>Kullanım:</strong> Dini metinler, el yazması kitaplar
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="script-info" onclick="setScriptStyle('sulus')" data-style="sulus">
+                                        <h4 class="script-title">Sülüs Yazı</h4>
+                                        <p class="script-desc">
+                                            <strong>Özellikler:</strong> Yuvarlak formlar, 1:3 oranında eğim<br>
+                                            <strong>Tarihçe:</strong> Abbasiler döneminde geliştirildi<br>
+                                            <strong>Kullanım:</strong> Resmi belgeler, cami kitabeleri
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="script-info" onclick="setScriptStyle('talik')" data-style="talik">
+                                        <h4 class="script-title">Talik Yazı</h4>
+                                        <p class="script-desc">
+                                            <strong>Özellikler:</strong> Eğik harfler, zarif kuyruklar<br>
+                                            <strong>Tarihçe:</strong> 14. yüzyılda İran'da geliştirildi<br>
+                                            <strong>Kullanım:</strong> Şiir divanları, edebi eserler
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="script-info" onclick="setScriptStyle('divani')" data-style="divani">
+                                        <h4 class="script-title">Divani Yazı</h4>
+                                        <p class="script-desc">
+                                            <strong>Özellikler:</strong> Süslü ve girift yapı, dalgalı hatlar<br>
+                                            <strong>Tarihçe:</strong> Osmanlı divanlarında 16. yüzyılda ortaya çıktı<br>
+                                            <strong>Kullanım:</strong> Fermanlar, beratlar, resmi belgeler
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Pratik Yazı Alanı ve Otomasyon -->
+                        <div class="mb-2">
+                            <label for="latinInput" class="form-label">Hat Yazısını Otomatik Oluştur (Latin harflerle yazın):</label>
+                            <input type="text" id="latinInput" class="form-control mb-2" placeholder="Ör: Osmanlıca, Selam, Allah">
+                            <button id="latinToArabicBtn" class="btn btn-warning btn-sm mb-2">
+                                <i class="bi bi-arrow-down"></i> Osmanlıca'ya Dönüştür & Yazıya Ekle
+                            </button>
+                        </div>
+                        <div id="practiceArea" contenteditable="true" class="hat-nesih mobile-friendly-area">
+                            بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                        </div>
+                        <!-- Pratik Alanı Kontrolleri -->
+                        <div class="d-flex justify-content-center mt-4 flex-wrap">
+                            <button id="convertBtn" class="btn btn-warning btn-hat m-2">
+                                <i class="bi bi-translate"></i> Arapça Stiline Dönüştür
+                            </button>
+                            <button id="clearBtn" class="btn btn-danger btn-hat m-2">
+                                <i class="bi bi-eraser"></i> Temizle
+                            </button>
+                            <button id="saveBtn" class="btn btn-success btn-hat m-2">
+                                <i class="bi bi-save"></i> Kaydet
+                            </button>
+                            <button id="exportBtn" class="btn btn-primary btn-hat m-2">
+                                <i class="bi bi-download"></i> Dışa Aktar
+                            </button>
+                            <a href="index.html" class="btn btn-secondary btn-hat m-2">
+                                <i class="bi bi-house-door"></i> Ana Sayfa
+                            </a>
+                        </div>
+                        <!-- Çizim Alanı (Canvas) -->
+                        <div class="canvas-wrapper">
+                            <h5 style="margin:20px 0 10px;">Çizimle Hat Pratiği Yapın</h5>
+                            <div class="canvas-controls mb-2">
+                                <span class="picker-label">Renk:</span>
+                                <input type="color" id="colorPicker" class="color-picker" value="#5e3a1f">
+                                <span class="picker-label">Kalınlık:</span>
+                                <input type="range" id="sizePicker" class="size-picker" min="2" max="20" value="3" style="width:80px;">
+                                <button id="eraserBtn" class="btn btn-outline-secondary btn-sm" title="Silgi Modu">
+                                    <i class="bi bi-eraser"></i>
+                                </button>
+                                <button id="undoBtn" class="btn btn-outline-primary btn-sm" title="Geri Al">
+                                    <i class="bi bi-arrow-counterclockwise"></i>
+                                </button>
+                                <button id="redoBtn" class="btn btn-outline-primary btn-sm" title="İleri Al">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </button>
+                                <button onclick="clearCanvas()" class="btn btn-danger btn-sm">Temizle</button>
+                                <button onclick="saveCanvas()" class="btn btn-success btn-sm">Kaydet (PNG)</button>
+                            </div>
+                            <canvas id="drawArea"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <p>© 2025 Hat Sanatı Uygulaması | Tüm hakları saklıdır</p>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // --- Hat Yazı Otomasyonu ---
+        // Gelişmiş Arap harfi eşleştirme: baş/orta/son/yalnız harf gösterimi
+        const arabicMap = {
+            // basit temel harf dönüşümü (Osmanlıca için tam uygun değil, demo amaçlı ileri seviye yapılabilir)
+            'a': 'ا', 'b': 'ب', 'c': 'ج', 'ç': 'چ', 'd': 'د', 'e': 'ى',
+            'f': 'ف', 'g': 'گ', 'ğ': 'غ', 'h': 'ح', 'ı': 'ى', 'i': 'ی', 'j': 'ژ',
+            'k': 'ك', 'l': 'ل', 'm': 'م', 'n': 'ن', 'o': 'و', 'ö': 'ؤ',
+            'p': 'پ', 'r': 'ر', 's': 'س', 'ş': 'ش', 't': 'ت', 'u': 'و',
+            'ü': 'ؤ', 'v': 'و', 'y': 'ی', 'z': 'ز', 'q': 'ق',
+            ' ': ' ', ',': '،', '?': '؟', ';': '؛', '\'': '’'
+        };
+        function latinToArabicWord(word) {
+            // Harf harf çevir (sadece gösterim için, ileri seviye için harf pozisyonuna göre harf şekli eklenebilir)
+            let result = '';
+            for (let char of word.toLowerCase()) {
+                result += arabicMap[char] || char;
+            }
+            return result;
+        }
+        function latinToArabicSentence(sentence) {
+            // Kelime bazlı çeviri, kelimeleri tersten birleştir (Arapça sağdan yazılır)
+            return sentence.split(' ')
+                .map(w => latinToArabicWord(w))
+                .reverse()
+                .join(' ');
+        }
+        document.getElementById('latinToArabicBtn').addEventListener('click', function(){
+            const latinInput = document.getElementById('latinInput').value.trim();
+            if (!latinInput) return;
+            const arabic = latinToArabicSentence(latinInput);
+            // Pratik alanına ekle (sonuna eklenir)
+            document.getElementById('practiceArea').innerText += (document.getElementById('practiceArea').innerText ? '\n' : '') + arabic;
+        });
+
+        // Yazı stili değiştir
+        function setScriptStyle(style) {
+            const practiceArea = document.getElementById('practiceArea');
+            document.querySelectorAll('.script-info').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelector(`.script-info[data-style="${style}"]`).classList.add('active');
+            practiceArea.className = '';
+            practiceArea.classList.add('hat-' + style, 'mobile-friendly-area');
+        }
+
+        // Latin harfli metni Arapçaya dönüştür (pratik alanı için)
+        function convertToArabic() {
+            const practiceArea = document.getElementById('practiceArea');
+            let text = practiceArea.innerText;
+            practiceArea.innerText = latinToArabicSentence(text);
+        }
+
+        // Temizle, kaydet, dışa aktar
+        function saveWork() {
+            const content = document.getElementById('practiceArea').innerHTML;
+            localStorage.setItem('hatPractice', content);
+            alert('Çalışmanız başarıyla kaydedildi!');
+        }
+        function exportWork() {
+            const content = document.getElementById('practiceArea').innerText;
+            const style = document.querySelector('.script-info.active').dataset.style;
+            const filename = `hat-calismasi-${style}-${new Date().toISOString().slice(0,10)}.txt`;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        function loadWork() {
+            const saved = localStorage.getItem('hatPractice');
+            if (saved) {
+                document.getElementById('practiceArea').innerHTML = saved;
+            }
+        }
+        document.getElementById('convertBtn').addEventListener('click', convertToArabic);
+        document.getElementById('clearBtn').addEventListener('click', function() {
+            if (confirm('Pratik alanını temizlemek istediğinize emin misiniz?')) {
+                document.getElementById('practiceArea').innerHTML = '';
+            }
+        });
+        document.getElementById('saveBtn').addEventListener('click', saveWork);
+        document.getElementById('exportBtn').addEventListener('click', exportWork);
+        document.addEventListener('DOMContentLoaded', function() {
+            setScriptStyle('nesih');
+            loadWork();
+            document.getElementById('practiceArea').focus();
+        });
+
+        // --- Çizim Alanı Geliştirmeleri ---
+        let canvas, ctx, drawing = false, eraserMode = false;
+        let lastX = 0, lastY = 0;
+        let drawColor = '#5e3a1f';
+        let drawSize = 3;
+        let drawHistory = [];
+        let redoStack = [];
+
+        function resizeCanvas() {
+            canvas = document.getElementById('drawArea');
+            ctx = canvas.getContext('2d');
+            let width = Math.min(window.innerWidth - 40, 800);
+            if(width < 300) width = 300;
+            let h = window.innerWidth < 600 ? 130 : 220;
+            // Save current image
+            let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            canvas.width = width;
+            canvas.height = h;
+            ctx.putImageData(imgData, 0, 0);
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        function getPos(e) {
+            let rect = canvas.getBoundingClientRect();
+            if(e.touches) {
+                return {
+                    x: e.touches[0].clientX - rect.left,
+                    y: e.touches[0].clientY - rect.top
+                };
+            } else {
+                return {
+                    x: e.clientX - rect.left,
+                    y: e.clientY - rect.top
+                };
+            }
+        }
+        function beginDraw(e) {
+            drawing = true;
+            redoStack = [];
+            saveHistory();
+            const pos = getPos(e);
+            lastX = pos.x; lastY = pos.y;
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+        }
+        function draw(e) {
+            if(!drawing) return;
+            e.preventDefault();
+            const pos = getPos(e);
+            ctx.lineWidth = drawSize;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = eraserMode ? "#f8f4e8" : drawColor;
+            ctx.globalCompositeOperation = eraserMode ? "destination-out" : "source-over";
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+            lastX = pos.x; lastY = pos.y;
+        }
+        function endDraw(e) {
+            drawing = false;
+            ctx.beginPath();
+        }
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawHistory = [];
+            redoStack = [];
+        }
+        function saveCanvas() {
+            let link = document.createElement('a');
+            link.download = 'hat-cizimi.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+        // --- Kalem ve Silgi Seçimi ---
+        document.getElementById('colorPicker').addEventListener('change', function(){
+            drawColor = this.value;
+            eraserMode = false;
+            document.getElementById('eraserBtn').classList.remove('active');
+        });
+        document.getElementById('sizePicker').addEventListener('input', function(){
+            drawSize = this.value;
+        });
+        document.getElementById('eraserBtn').addEventListener('click', function(){
+            eraserMode = !eraserMode;
+            this.classList.toggle('active', eraserMode);
+        });
+
+        // --- Geri Al / İleri Al ---
+        function saveHistory() {
+            // Canvas'ı kaydet
+            if(canvas && ctx) {
+                drawHistory.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+                if(drawHistory.length > 30) drawHistory.shift(); // maksimum 30 adım
+            }
+        }
+        function undo() {
+            if(drawHistory.length > 0) {
+                // Son adımı geri al
+                redoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+                let prev = drawHistory.pop();
+                ctx.putImageData(prev, 0, 0);
+            }
+        }
+        function redo() {
+            if(redoStack.length > 0) {
+                drawHistory.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+                let next = redoStack.pop();
+                ctx.putImageData(next, 0, 0);
+            }
+        }
+        document.getElementById('undoBtn').addEventListener('click', undo);
+        document.getElementById('redoBtn').addEventListener('click', redo);
+        // --- Canvas olayları ---
+        document.addEventListener('DOMContentLoaded', function(){
+            canvas = document.getElementById('drawArea');
+            ctx = canvas.getContext('2d');
+            resizeCanvas();
+            // Mouse events
+            canvas.addEventListener('mousedown', beginDraw);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', endDraw);
+            canvas.addEventListener('mouseleave', endDraw);
+            // Touch events
+            canvas.addEventListener('touchstart', function(e){beginDraw(e);}, false);
+            canvas.addEventListener('touchmove', function(e){draw(e);}, false);
+            canvas.addEventListener('touchend', endDraw, false);
+            // Varsayılan renk/kalem ayarla
+            drawColor = document.getElementById('colorPicker').value;
+            drawSize = document.getElementById('sizePicker').value;
+        });
+    </script>
+</body>
+</html>

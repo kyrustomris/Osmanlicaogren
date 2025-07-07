@@ -1,0 +1,8 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="6" y="10" width="36" height="28" rx="6" fill="#FFD6E0" stroke="#FF4081" stroke-width="4"/>
+  <rect x="12" y="18" width="8" height="8" rx="2" fill="#FF4081"/>
+  <rect x="28" y="18" width="8" height="8" rx="2" fill="#FF4081"/>
+  <rect x="12" y="28" width="8" height="8" rx="2" fill="#FF4081" opacity="0.7"/>
+  <rect x="28" y="28" width="8" height="8" rx="2" fill="#FF4081" opacity="0.7"/>
+  <text x="24" y="44" text-anchor="middle" font-size="12" fill="#FF4081" font-family="Arial" font-weight="bold">Hafta</text>
+</svg>

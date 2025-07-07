@@ -1,0 +1,5 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="24" cy="24" r="22" fill="#FEE440" stroke="#FFD600" stroke-width="4"/>
+  <path d="M24 12L27.09 19.26L35 20.27L29 25.14L30.18 33.02L24 29L17.82 33.02L19 25.14L13 20.27L20.91 19.26L24 12Z" fill="#FF6F3C" stroke="#FF8500" stroke-width="2"/>
+  <text x="24" y="41" text-anchor="middle" font-size="11" fill="#444" font-family="Arial" font-weight="bold">İlk</text>
+</svg>

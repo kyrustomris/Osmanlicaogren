@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profilim | Osmanlıca Öğren</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8fafc; }
+        .profile-card { background: #fff; border-radius: 15px; padding: 2rem; max-width: 480px; margin: 2rem auto; box-shadow: 0 3px 18px rgba(0,0,0,0.07); }
+        .avatar { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid #e3e3e3; }
+        .edit-btn { position: absolute; top: 1rem; right: 1rem; }
+        .stats-card { background: #f3f6fa; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; }
+        .progress { height: 18px; }
+        [disabled] { background: #e9ecef !important; }
+    </style>
+</head>
+<body>
+    <div class="profile-card position-relative">
+        <button id="editProfileBtn" class="btn btn-outline-primary btn-sm edit-btn"><i class="bi bi-pencil"></i> Düzenle</button>
+        <div class="text-center mb-3">
+            <img id="profileAvatar" src="default-avatar.png" alt="Profil Fotoğrafı" class="avatar mb-2">
+            <input type="file" id="avatarInput" accept="image/*" class="form-control form-control-sm d-none">
+            <div>
+                <strong id="usernameDisplay">Kullanıcı Adı</strong>
+                <div class="text-muted" id="userBioDisplay">Osmanlıca öğreniyor...</div>
+            </div>
+        </div>
+        <form id="profileForm">
+            <div class="mb-2">
+                <label for="usernameInput" class="form-label">Kullanıcı Adı</label>
+                <input type="text" id="usernameInput" class="form-control" maxlength="30" disabled>
+            </div>
+            <div class="mb-2">
+                <label for="emailInput" class="form-label">E-posta</label>
+                <input type="email" id="emailInput" class="form-control" maxlength="50" disabled>
+            </div>
+            <div class="mb-2">
+                <label for="bioInput" class="form-label">Hakkımda</label>
+                <textarea id="bioInput" class="form-control" rows="2" maxlength="100" disabled></textarea>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="button" id="saveProfileBtn" class="btn btn-success me-2" style="display:none;">Kaydet</button>
+                <button type="button" id="cancelEditBtn" class="btn btn-secondary" style="display:none;">İptal</button>
+            </div>
+        </form>
+        <hr>
+        <h5 class="mb-3"><i class="bi bi-bar-chart"></i> İstatistikler</h5>
+        <div class="stats-card">
+            <div class="d-flex justify-content-between">
+                <span>Öğrenilen Kelime</span>
+                <span id="kelimeStat">0/100</span>
+            </div>
+            <div class="progress mt-1">
+                <div class="progress-bar" id="kelimeProgress" role="progressbar" style="width:0%"></div>
+            </div>
+        </div>
+        <div class="stats-card">
+            <div class="d-flex justify-content-between">
+                <span>Quiz Başarısı</span>
+                <span id="quizStat">0%</span>
+            </div>
+            <div class="progress mt-1">
+                <div class="progress-bar bg-success" id="quizProgress" role="progressbar" style="width:0%"></div>
+            </div>
+        </div>
+        <div class="stats-card d-flex justify-content-between align-items-center">
+            <span>Hat Çalışmaları</span>
+            <span id="hatStat">0 kayıtlı çalışma</span>
+        </div>
+        <div class="mt-4 d-grid">
+            <a href="index.html" class="btn btn-outline-primary">Ana Sayfaya Dön</a>
+        </div>
+    </div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script>
+        // Profil verilerini ve avatarı yükle
+        function loadUserData() {
+            const userData = JSON.parse(localStorage.getItem('userProfile')) || {
+                username: 'Kullanıcı Adı',
+                email: 'ornek@email.com',
+                bio: 'Osmanlıca öğreniyor...'
+            };
+            document.getElementById('usernameInput').value = userData.username;
+            document.getElementById('emailInput').value = userData.email;
+            document.getElementById('bioInput').value = userData.bio;
+            document.getElementById('usernameDisplay').textContent = userData.username;
+            document.getElementById('userBioDisplay').textContent = userData.bio;
+
+            const avatar = localStorage.getItem('userAvatar');
+            document.getElementById('profileAvatar').src = avatar || 'default-avatar.png';
+
+            const stats = JSON.parse(localStorage.getItem('userStats')) || { learnedWords: 0, quizSuccess: 0, hatStudies: 0 };
+            document.getElementById('kelimeStat').textContent = `${stats.learnedWords || 0}/100`;
+            document.getElementById('kelimeProgress').style.width = Math.min((stats.learnedWords || 0), 100) + '%';
+            document.getElementById('quizStat').textContent = `${stats.quizSuccess || 0}%`;
+            document.getElementById('quizProgress').style.width = Math.min((stats.quizSuccess || 0), 100) + '%';
+            document.getElementById('hatStat').textContent = `${stats.hatStudies || 0} kayıtlı çalışma`;
+        }
+
+        function saveUserData() {
+            const username = document.getElementById('usernameInput').value.trim();
+            const email = document.getElementById('emailInput').value.trim();
+            const bio = document.getElementById('bioInput').value.trim();
+
+            if (!username) return alert("Kullanıcı adı boş olamaz!");
+            if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) return alert("Geçerli bir e-posta giriniz!");
+            const userData = { username, email, bio };
+            localStorage.setItem('userProfile', JSON.stringify(userData));
+            loadUserData();
+            setEditMode(false);
+            alert('Profil kaydedildi.');
+        }
+
+        function setEditMode(enabled) {
+            document.getElementById('usernameInput').disabled = !enabled;
+            document.getElementById('emailInput').disabled = !enabled;
+            document.getElementById('bioInput').disabled = !enabled;
+            document.getElementById('saveProfileBtn').style.display = enabled ? 'inline-block' : 'none';
+            document.getElementById('cancelEditBtn').style.display = enabled ? 'inline-block' : 'none';
+            document.getElementById('editProfileBtn').style.display = enabled ? 'none' : 'inline-block';
+            if(enabled) document.getElementById('usernameInput').focus();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserData();
+            setEditMode(false);
+
+            document.getElementById('editProfileBtn').onclick = () => setEditMode(true);
+            document.getElementById('cancelEditBtn').onclick = () => { loadUserData(); setEditMode(false); };
+            document.getElementById('saveProfileBtn').onclick = saveUserData;
+
+            document.getElementById('profileAvatar').onclick = () => {
+                if(document.getElementById('usernameInput').disabled) return;
+                document.getElementById('avatarInput').click();
+            };
+            document.getElementById('avatarInput').onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        document.getElementById('profileAvatar').src = event.target.result;
+                        localStorage.setItem('userAvatar', event.target.result);
+                    }
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
