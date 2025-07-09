@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Destek & Katkı | Osmanlıca Öğren</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <!-- Stripe JS -->
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    .badge-icon {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      font-size: 2rem;
+      border-radius: 50%;
+    }
+    .donation-option {
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+    .donation-option:hover {
+      transform: translateY(-5px);
+      border-color: #6f42c1;
+    }
+    .donation-option.recommended {
+      border-color: #6f42c1;
+      position: relative;
+      overflow: hidden;
+    }
+    .recommended-badge {
+      position: absolute;
+      top: 10px;
+      right: -25px;
+      background: #6f42c1;
+      color: white;
+      padding: 5px 30px;
+      transform: rotate(45deg);
+      font-size: 0.7rem;
+    }
+    .contributor-card {
+      transition: transform 0.3s ease;
+    }
+    .contributor-card:hover {
+      transform: scale(1.05);
+    }
+    .faq-item {
+      margin-bottom: 15px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <!-- Ödeme Seçenekleri Bölümü -->
+  <section class="container my-5 py-4">
+    <h2 class="text-center fw-bold mb-5">Bağış Seçenekleri</h2>
+    <div class="row g-4">
+      <!-- Tek Seferlik Bağış -->
+      <div class="col-md-6">
+        <div class="card donation-option h-100 shadow-sm">
+          <div class="card-body text-center py-4">
+            <div class="badge-icon bg-primary bg-opacity-10 text-primary mb-3">
+              <i class="bi bi-coin"></i>
+            </div>
+            <h3>Tek Seferlik Bağış</h3>
+            <p class="text-muted mb-4">Projeye bir kerelik destek sağlayın</p>
+            
+            <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
+              <button class="btn btn-outline-primary donation-amount" data-amount="50">50₺</button>
+              <button class="btn btn-outline-primary donation-amount" data-amount="100">100₺</button>
+              <button class="btn btn-outline-primary donation-amount" data-amount="250">250₺</button>
+              <input type="number" class="form-control mt-2" placeholder="Özel Miktar (₺)" id="custom-amount" style="max-width: 150px;">
+            </div>
+            
+            <form action="destek.html" method="GET">
+  <button type="submit" class="btn btn-primary px-4">
+    <i class="bi bi-credit-card me-2"></i>Bağış Yap
+  </button>
+</form>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Aylık Bağış -->
+      <div class="col-md-6">
+        <div class="card donation-option recommended h-100 shadow-sm">
+          <span class="recommended-badge">ÖNERİLEN</span>
+          <div class="card-body text-center py-4">
+            <div class="badge-icon bg-success bg-opacity-10 text-success mb-3">
+              <i class="bi bi-arrow-repeat"></i>
+            </div>
+            <h3>Aylık Destek</h3>
+            <p class="text-muted mb-4">Düzenli destekçimiz olun</p>
+            
+            <div class="btn-group mb-4" role="group">
+              <input type="radio" class="btn-check" name="monthly-amount" id="monthly-50" autocomplete="off" checked>
+              <label class="btn btn-outline-success" for="monthly-50">50₺/ay</label>
+              
+              <input type="radio" class="btn-check" name="monthly-amount" id="monthly-100" autocomplete="off">
+              <label class="btn btn-outline-success" for="monthly-100">100₺/ay</label>
+              
+              <input type="radio" class="btn-check" name="monthly-amount" id="monthly-250" autocomplete="off">
+              <label class="btn btn-outline-success" for="monthly-250">250₺/ay</label>
+            </div>
+            
+            <form action="destek.html" method="GET">
+  <button type="submit" class="btn btn-primary px-4">
+    <i class="bi bi-credit-card me-2"></i>Bağış Yap
+  </button>
+</form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Katkıda Bulunanlar Bölümü -->
+  <section class="bg-light py-5 my-5">
+    <div class="container">
+      <h2 class="text-center fw-bold mb-5">Katkıda Bulunanlar</h2>
+      
+      <div class="row g-4">
+        <!-- Altın Destekçiler -->
+        <div class="col-12 mb-4">
+          <h4 class="text-center mb-4"><i class="bi bi-trophy-fill text-warning me-2"></i>Altın Destekçiler</h4>
+          <div class="d-flex flex-wrap justify-content-center gap-4">
+            <div class="card contributor-card shadow-sm" style="width: 120px;">
+              <div class="card-body text-center p-3">
+                <div class="position-relative mb-2">
+                  <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle" width="60" alt="Kullanıcı">
+                  <span class="position-absolute bottom-0 end-0 bg-warning text-white rounded-circle p-1">
+                    <i class="bi bi-award-fill"></i>
+                  </span>
+                </div>
+                <h6 class="mb-0">Ahmet Y.</h6>
+                <small class="text-muted">500₺+</small>
+              </div>
+            </div>
+            <!-- Diğer destekçiler... -->
+          </div>
+        </div>
+        
+        <!-- Gönüllüler -->
+        <div class="col-12">
+          <h4 class="text-center mb-4"><i class="bi bi-heart-fill text-danger me-2"></i>Gönüllüler</h4>
+          <div class="d-flex flex-wrap justify-content-center gap-3">
+            <div class="card contributor-card shadow-sm" style="width: 100px;">
+              <div class="card-body text-center p-2">
+                <img src="https://randomuser.me/api/portraits/women/44.jpg" class="rounded-circle mb-2" width="50" alt="Kullanıcı">
+                <h6 class="mb-0">Ayşe K.</h6>
+                <small class="text-muted">Çevirmen</small>
+              </div>
+            </div>
+            <!-- Diğer gönüllüler... -->
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center mt-5">
+        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#becomeContributorModal">
+          <i class="bi bi-plus-circle me-2"></i>Katkıda Bulunan Ol
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Genişletilmiş SSS Bölümü -->
+  <section class="container my-5 py-4">
+    <h2 class="text-center fw-bold mb-5">Sıkça Sorulan Sorular</h2>
+    
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="faq-item shadow-sm mb-4">
+          <div class="accordion-item">
+            <h3 class="accordion-header">
+              <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faqPayment">
+                Bağışlar nasıl kullanılıyor?
+              </button>
+            </h3>
+            <div id="faqPayment" class="accordion-collapse collapse">
+              <div class="accordion-body">
+                <p>Bağışlarınız şu alanlarda kullanılmaktadır:</p>
+                <ul>
+                  <li>Sunucu ve hosting maliyetleri</li>
+                  <li>Yeni özelliklerin geliştirilmesi</li>
+                  <li>İçerik üretimi ve çeviriler</li>
+                  <li>Topluluk etkinlikleri</li>
+                </ul>
+                <p class="mb-0">Detaylı harcama raporlarını her ay paylaşıyoruz.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="faq-item shadow-sm mb-4">
+          <div class="accordion-item">
+            <h3 class="accordion-header">
+              <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faqTax">
+                Bağışlar vergiden düşülebilir mi?
+              </button>
+            </h3>
+            <div id="faqTax" class="accordion-collapse collapse">
+              <div class="accordion-body">
+                <p>Evet, 1000₺ ve üzeri bağışlar için resmi bağış makbuzu düzenleyebiliriz. Bağış sonrası fatura talep etmek için lütfen bizimle iletişime geçin.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-6">
+        <div class="faq-item shadow-sm mb-4">
+          <div class="accordion-item">
+            <h3 class="accordion-header">
+              <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faqCancel">
+                Aylık bağışı nasıl iptal ederim?
+              </button>
+            </h3>
+            <div id="faqCancel" class="accordion-collapse collapse">
+              <div class="accordion-body">
+                <p>Aylık bağışlarınızı istediğiniz zaman iptal edebilirsiniz:</p>
+                <ol>
+                  <li>Profil sayfanıza gidin</li>
+                  <li>"Aboneliklerim" sekmesini seçin</li>
+                  <li>İptal etmek istediğiniz bağışı bulun</li>
+                  <li>"Aboneliği İptal Et" butonuna tıklayın</li>
+                </ol>
+                <p class="mb-0">Sorun yaşarsanız destek@osmanlicaogren.com adresine mail atabilirsiniz.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="faq-item shadow-sm mb-4">
+          <div class="accordion-item">
+            <h3 class="accordion-header">
+              <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faqRewards">
+                Destekçi rozetleri nasıl kazanılır?
+              </button>
+            </h3>
+            <div id="faqRewards" class="accordion-collapse collapse">
+              <div class="accordion-body">
+                <p>Farklı katkı türlerine göre rozetler kazanabilirsiniz:</p>
+                <div class="row">
+                  <div class="col-6 mb-3">
+                    <div class="d-flex align-items-center">
+                      <span class="badge bg-warning me-2"><i class="bi bi-coin"></i></span>
+                      <span>100₺+ bağış - Bronz Rozet</span>
+                    </div>
+                  </div>
+                  <div class="col-6 mb-3">
+                    <div class="d-flex align-items-center">
+                      <span class="badge bg-secondary me-2"><i class="bi bi-code-slash"></i></span>
+                      <span>5+ kod katkısı - Geliştirici Rozeti</span>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="d-flex align-items-center">
+                      <span class="badge bg-success me-2"><i class="bi bi-translate"></i></span>
+                      <span>3+ çeviri - Çevirmen Rozeti</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Katkıda Bulunan Olma Modalı -->
+  <div class="modal fade" id="becomeContributorModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Katkıda Bulunan Ol</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="contributorForm">
+            <div class="mb-3">
+              <label class="form-label">Katkı Türü</label>
+              <select class="form-select" required>
+                <option value="" selected disabled>Seçiniz</option>
+                <option value="code">Kod Katkısı</option>
+                <option value="translation">Çeviri</option>
+                <option value="donation">Maddi Destek</option>
+                <option value="other">Diğer</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">E-posta</label>
+              <input type="email" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Katkı Detayları</label>
+              <textarea class="form-control" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Gönder</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+<a href="index.html" class="btn btn-primary rounded-circle position-fixed" 
+   style="width: 50px; height: 50px; bottom: 20px; left: 20px; display: flex; align-items: center; justify-content: center;"
+   data-bs-toggle="tooltip" title="Ana Sayfaya Dön">
+  <i class="bi bi-house-door"></i>
+</a>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    // Stripe Ödeme Entegrasyonu
+    const stripe = Stripe('YOUR_STRIPE_PUBLIC_KEY');
+    
+    // Tek seferlik bağış
+    document.getElementById('one-time-donate').addEventListener('click', () => {
+      const amount = document.querySelector('.donation-amount.active')?.dataset.amount || 
+                    document.getElementById('custom-amount').value;
+      
+      if (!amount || amount < 10) {
+        alert('Lütfen geçerli bir miktar girin (minimum 10₺)');
+        return;
+      }
+      
+      stripe.redirectToCheckout({
+        lineItems: [{
+          price: 'ONE_TIME_PRICE_ID', // Stripe'da oluşturulan price ID
+          quantity: 1
+        }],
+        mode: 'payment',
+        successUrl: 'https://osmanlicaogren.com/basarili?session_id={CHECKOUT_SESSION_ID}',
+        cancelUrl: 'https://osmanlicaogren.com/iptal',
+        customerEmail: 'user@example.com' // Gerçekte kullanıcıdan alınmalı
+      });
+    });
+    
+    // Aylık bağış
+    document.getElementById('monthly-donate').addEventListener('click', () => {
+      const amount = document.querySelector('input[name="monthly-amount"]:checked').id.split('-')[1];
+      
+      stripe.redirectToCheckout({
+        lineItems: [{
+          price: 'MONTHLY_'+amount+'_PRICE_ID', // Stripe'da oluşturulan price ID
+          quantity: 1
+        }],
+        mode: 'subscription',
+        successUrl: 'https://osmanlicaogren.com/basarili?session_id={CHECKOUT_SESSION_ID}',
+        cancelUrl: 'https://osmanlicaogren.com/iptal'
+      });
+    });
+    
+    // Bağış miktarı seçimi
+    document.querySelectorAll('.donation-amount').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.donation-amount').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+    
+    // Form gönderimi
+    document.getElementById('contributorForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Burada form verilerini işleyebilirsiniz
+      alert('Başvurunuz alındı! En kısa sürede dönüş yapacağız.');
+      bootstrap.Modal.getInstance(document.getElementById('becomeContributorModal')).hide();
+    });
+  </script>
+</body>
+</html>
