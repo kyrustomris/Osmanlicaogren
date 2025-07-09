@@ -7,15 +7,79 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Lateef&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="themes.css">
     <style>
+        /* Temel Stiller */
+        .osmanlica-font {
+            font-family: 'Lateef', serif;
+            font-size: 2.5rem;
+            line-height: 1.2;
+        }
+        
+        .transliteration {
+            font-style: italic;
+            color: #6c757d;
+        }
+        
+        .meaning {
+            font-size: 1.2rem;
+            margin-top: 1rem;
+        }
+        
+        .word-card {
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        /* Temalar */
+        .light-theme {
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        
+        .dark-theme {
+            background-color: #212529;
+            color: #f8f9fa;
+        }
+        
+        .dark-theme .card {
+            background-color: #2c3034;
+            color: #f8f9fa;
+        }
+        
+        .ottoman-theme {
+            background-color: #f5f5dc;
+            color: #5a3921;
+            background-image: url('https://www.transparenttextures.com/patterns/arabesque.png');
+        }
+        
+        .ottoman-theme .card {
+            background-color: rgba(245, 245, 220, 0.9);
+            border: 1px solid #5a3921;
+        }
+        
+        .ottoman-theme .osmanlica-font {
+            color: #8b4513;
+        }
+        
+        /* Sosyal Medya Butonları */
         .social-media-bar {
             position: fixed;
             bottom: 20px;
             right: 20px;
             z-index: 1000;
         }
+        
         .social-btn {
             width: 40px;
             height: 40px;
@@ -27,21 +91,41 @@
             transition: all 0.3s;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
+        
         .social-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 5px 10px rgba(0,0,0,0.3);
         }
+        
         .support-btn {
             background-color: #6f42c1;
             color: white;
         }
-        #quizModal .modal-content { min-width: 320px;}
-        #quizModal .quiz-option { min-width: 200px; }
+        
+        /* Quiz Modal */
+        #quizModal .modal-content { 
+            min-width: 320px;
+        }
+        
+        #quizModal .quiz-option { 
+            min-width: 200px; 
+        }
+        
+        /* Responsive Düzenlemeler */
+        @media (max-width: 768px) {
+            .osmanlica-font {
+                font-size: 2rem;
+            }
+            
+            .nav-btn {
+                width: 45px;
+                height: 45px;
+            }
+        }
     </style>
 </head>
 <body class="light-theme">
-    <div class="ottoman-frame">
-        <div class="container py-4">
+    <div class="container py-4">
         <header class="text-center mb-4">
             <h1><i class="bi bi-book"></i> Osmanlıca Öğren</h1>
             <div class="d-flex justify-content-center align-items-center gap-3">
@@ -66,9 +150,9 @@
             <input id="email" type="email" placeholder="E-posta" class="form-control mb-2">
             <input id="password" type="password" placeholder="Şifre" class="form-control mb-2">
             <div class="d-flex gap-2 mb-2">
-                <button onclick="login()" class="btn btn-primary flex-grow-1">Giriş Yap</button>
-                <button onclick="register()" class="btn btn-success flex-grow-1">Kayıt Ol</button>
-                <button onclick="logout()" class="btn btn-outline-danger flex-grow-1">Çıkış Yap</button>
+                <button id="loginBtn" class="btn btn-primary flex-grow-1">Giriş Yap</button>
+                <button id="registerBtn" class="btn btn-success flex-grow-1">Kayıt Ol</button>
+                <button id="logoutBtn" class="btn btn-outline-danger flex-grow-1">Çıkış Yap</button>
             </div>
             <div id="user-info" style="margin-top:1em; color:green;"></div>
         </div>
@@ -85,7 +169,6 @@
                             <div class="mb-3">
                                 <label for="premiumPassword" class="form-label">Premium Şifre</label>
                                 <input type="password" class="form-control" id="premiumPassword" placeholder="Premium şifrenizi girin">
-                                <div class="form-text">Deneme şifresi: 1234567890</div>
                             </div>
                             <button id="premiumLoginBtn" class="btn btn-warning w-100">Premium Giriş</button>
                         </div>
@@ -100,10 +183,6 @@
                                 <li>Reklamsız deneyim</li>
                                 <li>Gelişmiş istatistikler</li>
                             </ul>
-                            <div class="text-center py-3">
-                                <h5 class="text-success">₺29.99 / aylık</h5>
-                                <small class="text-muted">*Otomatik yenilenir</small>
-                            </div>
                             <button id="premiumLogoutBtn" class="btn btn-outline-danger w-100">Çıkış Yap</button>
                         </div>
                     </div>
@@ -112,29 +191,24 @@
         </div>
 
         <div class="d-flex justify-content-center gap-2 mb-4 flex-wrap">
-            
-            <a href="hat-sanati.html" class="btn btn-warning nav-btn" title="Yazı sanatları">
+            <button id="hatSanatiBtn" class="btn btn-warning nav-btn" title="Yazı sanatları">
                 <i class="bi bi-pen-fill"></i>
-            </a>
-            <a href="https://www.osmanlicagazeteler.org/" target="_blank" class="btn btn-info nav-btn" title="Osmanlıca Gazeteler">
+            </button>
+            <button id="gazetelerBtn" class="btn btn-info nav-btn" title="Osmanlıca Gazeteler">
                 <i class="bi bi-newspaper"></i>
-            </a>
-            <a href="https://www.osmanlicagazeteler.org/Sozluk.php" target="_blank" class="btn btn-info nav-btn" title="Osmanlıca Sözlük">
+            </button>
+            <button id="sozlukBtn" class="btn btn-info nav-btn" title="Osmanlıca Sözlük">
                 <i class="bi bi-journal-bookmark"></i>
-            </a>
-            <a href="premium.html" class="btn btn-warning nav-btn" title="Premium Üyelik">
+            </button>
+            <button id="premiumBtn" class="btn btn-warning nav-btn" title="Premium Üyelik" data-bs-toggle="modal" data-bs-target="#premiumModal">
                 <i class="bi bi-star-fill"></i>
-            </a>
-            <a href="profile.html" class="btn btn-secondary nav-btn" title="Profil">
+            </button>
+            <button id="profileBtn" class="btn btn-secondary nav-btn" title="Profil">
                 <i class="bi bi-person-fill"></i>
-            </a>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-<script>
-  emailjs.init("8BdNp7u1PufddSEM8"); // 
-</script>
-            <a href="destek.html" class="btn btn-primary nav-btn" title="Destek">
+            </button>
+            <button id="destekBtn" class="btn btn-primary nav-btn" title="Destek">
                 <i class="bi bi-heart-fill"></i>
-            </a>
+            </button>
         </div>
 
         <div class="card search-card mb-3">
@@ -147,6 +221,7 @@
                 </div>
             </div>
         </div>
+
         <main>
             <div class="card word-card mb-3">
                 <div class="card-body">
@@ -183,19 +258,20 @@
                     <i class="bi bi-question-circle"></i> Quiz Başlat
                 </button>
             </div>
+            
             <!-- Quiz Modalı -->
-            <div id="quizModal" class="modal" tabindex="-1" style="display:none; background:rgba(0,0,0,0.2)">
-                <div class="modal-dialog">
+            <div id="quizModal" class="modal" tabindex="-1" style="display:none; background:rgba(0,0,0,0.5); position:fixed; top:0; left:0; right:0; bottom:0; z-index:1050;">
+                <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 id="quizQuestion" class="modal-title"></h5>
-                            <button type="button" class="btn-close" onclick="closeQuizModal()"></button>
+                            <button type="button" class="btn-close" onclick="document.getElementById('quizModal').style.display='none'"></button>
                         </div>
                         <div class="modal-body">
                             <div id="quizOptions"></div>
                             <button id="nextQuestionBtn" class="btn btn-info w-100 mt-2" style="display:none;">Sonraki Soru</button>
                             <button id="endQuizBtn" class="btn btn-danger w-100 mt-2" style="display:none;">Quiz Bitir</button>
-                            <p id="quizScore" class="mt-3"></p>
+                            <p id="quizScore" class="mt-3 text-center fw-bold"></p>
                         </div>
                     </div>
                 </div>
@@ -209,9 +285,6 @@
                             <i class="bi bi-bar-chart"></i> <span class="counter-text">0/0</span>
                         </span>
                         <div>
-                            <button id="premiumBtn" class="btn btn-sm btn-warning me-2" title="Premium Üyelik" data-bs-toggle="modal" data-bs-target="#premiumModal">
-                                <i class="bi bi-star-fill"></i>
-                            </button>
                             <div id="listeButonlari" class="list-buttons d-inline-flex flex-wrap gap-2">
                                 <!-- Liste butonları buraya eklenecek -->
                             </div>
@@ -219,6 +292,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="card upload-card">
                 <div class="card-body">
                     <h5 class="card-title mb-3"><i class="bi bi-file-earmark-arrow-up"></i> Kelime Listesi</h5>
@@ -256,19 +330,19 @@
             <a href="mailto:ozzasci@gmail.com" class="social-btn btn btn-danger" data-bs-toggle="tooltip" title="E-mail">
                 <i class="bi bi-envelope-fill"></i>
             </a>
-            <a href="destek.html" class="social-btn btn support-btn" data-bs-toggle="tooltip" title="Destek Olun">
+            <a href="#" id="supportBtn" class="social-btn btn support-btn" data-bs-toggle="tooltip" title="Destek Olun">
                 <i class="bi bi-heart-fill"></i>
             </a>
         </div>
-<div class="d-block d-md-none">
-  <a href="bagıs.html" class="btn btn-success w-100 mb-6">
-    <i class="bi bi-heart-fill"></i> Hızlı Destek
-  </a>
-</div>
-        <footer>
-            <div class="text-center py-2 border-top small">
-                &copy; 2025 Osmanlıca Öğren | Tüm Hakları Saklıdır
-            </div>
+
+        <div class="d-block d-md-none mt-3">
+            <button id="quickSupportBtn" class="btn btn-success w-100">
+                <i class="bi bi-heart-fill"></i> Hızlı Destek
+            </button>
+        </div>
+
+        <footer class="text-center py-2 border-top small">
+            &copy; 2025 Osmanlıca Öğren | Tüm Hakları Saklıdır
         </footer>
     </div>
 
@@ -276,14 +350,564 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <script src="firebase-init.js"></script>
-    <script src="auth.js"></script>
-    <script src="app.js"></script>
     <script>
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl)
-        })
+        // Firebase yapılandırması
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_BUCKET.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Firebase'i başlat
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        
+        // Auth durum listener'ı
+        auth.onAuthStateChanged(user => {
+            window.currentUser = user;
+            if (user) {
+                document.getElementById('user-info').textContent = `Hoş geldiniz, ${user.email}`;
+                document.getElementById('auth-section').classList.add('d-none');
+            } else {
+                document.getElementById('user-info').textContent = '';
+                document.getElementById('auth-section').classList.remove('d-none');
+            }
+        });
+
+        // Auth fonksiyonları
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => alert('Giriş başarılı!'))
+                .catch(error => alert('Giriş hatası: ' + error.message));
+        });
+
+        document.getElementById('registerBtn').addEventListener('click', () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(() => alert('Kayıt başarılı!'))
+                .catch(error => alert('Kayıt hatası: ' + error.message));
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            auth.signOut()
+                .then(() => alert('Çıkış yapıldı'))
+                .catch(error => alert('Çıkış hatası: ' + error.message));
+        });
+    </script>
+    <script>
+        // Uygulama ana kodu
+        class OsmanlicaUygulamasi {
+            constructor() {
+                this.elements = {
+                    osmanlicaKelime: document.getElementById('osmanlicaKelime'),
+                    transliteration: document.getElementById('transliteration'),
+                    meaning: document.getElementById('meaning'),
+                    kelimeSayaci: document.querySelector('.counter-text'),
+                    oncekiKelimeBtn: document.getElementById('oncekiKelimeBtn'),
+                    sonrakiKelimeBtn: document.getElementById('sonrakiKelimeBtn'),
+                    rastgeleKelimeBtn: document.getElementById('rastgeleKelimeBtn'),
+                    bilmiyorumBtn: document.getElementById('bilmiyorumBtn'),
+                    biliyorumBtn: document.getElementById('biliyorumBtn'),
+                    listeButonlari: document.getElementById('listeButonlari'),
+                    yeniListeEkleBtn: document.getElementById('yeniListeEkleBtn'),
+                    listeyiSilBtn: document.getElementById('listeyiSilBtn'),
+                    jsonFileInput: document.getElementById('jsonFileInput'),
+                    mevcutListeyeEkleBtn: document.getElementById('mevcutListeyeEkleBtn'),
+                    yeniListeOlusturBtn: document.getElementById('yeniListeOlusturBtn'),
+                    themeButtons: document.querySelectorAll('.theme-btn'),
+                    premiumBtn: document.getElementById('premiumBtn'),
+                    premiumModal: new bootstrap.Modal(document.getElementById('premiumModal')),
+                    premiumPassword: document.getElementById('premiumPassword'),
+                    premiumLoginBtn: document.getElementById('premiumLoginBtn'),
+                    premiumLogoutBtn: document.getElementById('premiumLogoutBtn'),
+                    premiumLoginForm: document.getElementById('premiumLoginForm'),
+                    premiumInfo: document.getElementById('premiumInfo'),
+                    premiumBadge: document.getElementById('premiumBadge'),
+                    wordLimitAlert: document.getElementById('wordLimitAlert'),
+                    searchInput: document.getElementById('searchInput'),
+                    searchButton: document.getElementById('searchButton'),
+                    startQuizBtn: document.getElementById('startQuizBtn'),
+                    quizModal: document.getElementById('quizModal'),
+                    quizQuestion: document.getElementById('quizQuestion'),
+                    quizOptions: document.getElementById('quizOptions'),
+                    quizScore: document.getElementById('quizScore'),
+                    nextQuestionBtn: document.getElementById('nextQuestionBtn'),
+                    endQuizBtn: document.getElementById('endQuizBtn')
+                };
+
+                this.kelimeListeleri = {};
+                this.aktifListeAdi = null;
+                this.suankiKelimeIndex = 0;
+                this.filteredKelimeler = [];
+                this.premium = false;
+                this.quizWords = [];
+                this.currentQuizIndex = 0;
+                this.quizScore = 0;
+                this.quizTotal = 0;
+
+                this.config = {
+                    freeWordLimit: 100,
+                    premiumPassword: "1234567890"
+                };
+
+                this.init();
+            }
+
+            async init() {
+                this.temaYukle();
+                this.eventListenerlariAyarla();
+                this.initQuiz();
+                this.checkAuthState();
+            }
+
+            checkAuthState() {
+                auth.onAuthStateChanged(user => {
+                    window.currentUser = user;
+                    this.firebaseReady();
+                });
+            }
+
+            async firebaseReady() {
+                if (window.currentUser) {
+                    await this.loadUserPremium();
+                    await this.firestoreListeleriYukle();
+                } else {
+                    this.kelimeListeleri = {};
+                    this.aktifListeAdi = null;
+                    this.listeButonlariniGuncelle();
+                    this.kelimeGoster();
+                    this.premium = false;
+                }
+            }
+
+            async loadUserPremium() {
+                if (!window.currentUser) return;
+                const userDoc = await db.collection("users").doc(window.currentUser.uid).get();
+                this.premium = userDoc.exists && userDoc.data().premium;
+                this.updatePremiumUI();
+            }
+
+            updatePremiumUI() {
+                this.elements.premiumBadge.classList.toggle('d-none', !this.premium);
+                this.elements.premiumLoginForm.classList.toggle('d-none', this.premium);
+                this.elements.premiumInfo.classList.toggle('d-none', !this.premium);
+            }
+
+            async firestoreListeleriYukle() {
+                const user = window.currentUser;
+                if (!user) return;
+                
+                try {
+                    const snapshot = await db.collection("users").doc(user.uid).collection("kelimeListeleri").get();
+                    this.kelimeListeleri = {};
+                    snapshot.forEach(doc => {
+                        this.kelimeListeleri[doc.id] = doc.data().kelimeler || [];
+                    });
+                    this.aktifListeAdi = Object.keys(this.kelimeListeleri)[0] || null;
+                    this.listeButonlariniGuncelle();
+                    this.kelimeGoster();
+                } catch (error) {
+                    console.error("Liste yükleme hatası:", error);
+                    this.showAlert("Listeler yüklenirken hata oluştu", "danger");
+                }
+            }
+
+            async firestoreListeKaydet(listeAdi) {
+                const user = window.currentUser;
+                if (!user) return;
+                
+                try {
+                    const kelimeler = this.kelimeListeleri[listeAdi] || [];
+                    await db.collection("users").doc(user.uid).collection("kelimeListeleri").doc(listeAdi).set({ kelimeler });
+                } catch (error) {
+                    console.error("Liste kaydetme hatası:", error);
+                    this.showAlert("Liste kaydedilirken hata oluştu", "danger");
+                }
+            }
+
+            async firestoreListeSil(listeAdi) {
+                const user = window.currentUser;
+                if (!user) return;
+                
+                try {
+                    await db.collection("users").doc(user.uid).collection("kelimeListeleri").doc(listeAdi).delete();
+                } catch (error) {
+                    console.error("Liste silme hatası:", error);
+                    this.showAlert("Liste silinirken hata oluştu", "danger");
+                }
+            }
+
+            temaYukle() {
+                const savedTheme = localStorage.getItem('osmanlicaTheme') || 'light';
+                this.temaDegistir(savedTheme);
+                this.elements.themeButtons.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.theme === savedTheme);
+                });
+            }
+
+            temaDegistir(theme) {
+                document.body.className = theme + '-theme';
+                localStorage.setItem('osmanlicaTheme', theme);
+                this.elements.themeButtons.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.theme === theme);
+                });
+            }
+
+            listeButonlariniGuncelle() {
+                this.elements.listeButonlari.innerHTML = '';
+                Object.keys(this.kelimeListeleri).forEach(listeAdi => {
+                    const btn = document.createElement('button');
+                    btn.className = `btn btn-sm ${listeAdi === this.aktifListeAdi ? 'btn-primary' : 'btn-outline-secondary'}`;
+                    btn.textContent = listeAdi;
+                    btn.addEventListener('click', () => this.aktifListeDegistir(listeAdi));
+                    this.elements.listeButonlari.appendChild(btn);
+                });
+            }
+
+            aktifListeDegistir(listeAdi) {
+                this.aktifListeAdi = listeAdi;
+                this.suankiKelimeIndex = 0;
+                this.filteredKelimeler = [];
+                this.listeButonlariniGuncelle();
+                this.kelimeGoster();
+            }
+
+            aktifKelimeler() {
+                return this.filteredKelimeler.length > 0 ? 
+                    this.filteredKelimeler : 
+                    (this.aktifListeAdi ? this.kelimeListeleri[this.aktifListeAdi] || [] : []);
+            }
+
+            kelimeGoster(isFiltered = false) {
+                const kelimeler = isFiltered ? this.filteredKelimeler : this.aktifKelimeler();
+
+                if (kelimeler.length === 0) {
+                    this.elements.osmanlicaKelime.textContent = "---";
+                    this.elements.transliteration.textContent = "---";
+                    this.elements.meaning.textContent = isFiltered ? "Sonuç bulunamadı" : (this.aktifListeAdi ? "Liste boş" : "Liste yükleyin");
+                    this.guncelleKelimeSayaci();
+                    return;
+                }
+
+                const kelime = kelimeler[this.suankiKelimeIndex];
+
+                [this.elements.osmanlicaKelime, this.elements.transliteration, this.elements.meaning]
+                    .forEach(el => el.style.opacity = 0);
+
+                setTimeout(() => {
+                    this.elements.osmanlicaKelime.textContent = kelime.word || "---";
+                    this.elements.transliteration.textContent = kelime.transliteration || "---";
+                    this.elements.meaning.textContent = kelime.meaning || "---";
+
+                    [this.elements.osmanlicaKelime, this.elements.transliteration, this.elements.meaning]
+                        .forEach(el => el.style.opacity = 1);
+
+                    this.guncelleKelimeSayaci();
+                }, 200);
+            }
+
+            guncelleKelimeSayaci() {
+                const kelimeler = this.aktifKelimeler();
+                this.elements.kelimeSayaci.textContent = 
+                    `${kelimeler.length ? this.suankiKelimeIndex + 1 : 0}/${kelimeler.length}`;
+            }
+
+            oncekiKelime() {
+                const kelimeler = this.aktifKelimeler();
+                if (!kelimeler.length) return;
+                this.suankiKelimeIndex = (this.suankiKelimeIndex - 1 + kelimeler.length) % kelimeler.length;
+                this.kelimeGoster(this.filteredKelimeler.length > 0);
+            }
+
+            sonrakiKelime() {
+                const kelimeler = this.aktifKelimeler();
+                if (!kelimeler.length) return;
+                this.suankiKelimeIndex = (this.suankiKelimeIndex + 1) % kelimeler.length;
+                this.kelimeGoster(this.filteredKelimeler.length > 0);
+            }
+
+            rastgeleKelime() {
+                const kelimeler = this.aktifKelimeler();
+                if (kelimeler.length < 2) return;
+
+                let yeniIndex;
+                do {
+                    yeniIndex = Math.floor(Math.random() * kelimeler.length);
+                } while (yeniIndex === this.suankiKelimeIndex);
+
+                this.suankiKelimeIndex = yeniIndex;
+                this.kelimeGoster(this.filteredKelimeler.length > 0);
+            }
+
+            kelimeAra() {
+                const searchTerm = this.elements.searchInput.value.toLowerCase();
+                if (!searchTerm) {
+                    this.filteredKelimeler = [];
+                    this.suankiKelimeIndex = 0;
+                    this.kelimeGoster();
+                    return;
+                }
+
+                const kelimeler = this.aktifListeAdi ? this.kelimeListeleri[this.aktifListeAdi] || [] : [];
+                this.filteredKelimeler = kelimeler.filter(kelime =>
+                    (kelime.word && kelime.word.toLowerCase().includes(searchTerm)) ||
+                    (kelime.transliteration && kelime.transliteration.toLowerCase().includes(searchTerm)) ||
+                    (kelime.meaning && kelime.meaning.toLowerCase().includes(searchTerm))
+                );
+
+                if (this.filteredKelimeler.length > 0) {
+                    this.suankiKelimeIndex = 0;
+                    this.kelimeGoster(true);
+                } else {
+                    this.showAlert("Aranan kelime bulunamadı", "warning");
+                }
+            }
+
+            async jsonDosyasiniIsle(file, mevcutListeyeEkle) {
+                if (this.checkWordLimit()) {
+                    this.elements.premiumModal.show();
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    try {
+                        const yeniKelimeler = JSON.parse(e.target.result);
+                        if (!Array.isArray(yeniKelimeler)) throw new Error("Geçersiz JSON formatı");
+
+                        const gecerliKelimeler = yeniKelimeler.filter(k => k?.word && k?.meaning);
+                        if (!gecerliKelimeler.length) throw new Error("Geçerli kelime bulunamadı");
+
+                        let listeAdi = this.aktifListeAdi;
+                        if (!mevcutListeyeEkle || !listeAdi) {
+                            listeAdi = file.name.replace('.json', '') || 'Yeni Liste';
+                            this.kelimeListeleri[listeAdi] = gecerliKelimeler;
+                            this.aktifListeAdi = listeAdi;
+                        } else {
+                            this.kelimeListeleri[listeAdi] = [
+                                ...(this.kelimeListeleri[listeAdi] || []),
+                                ...gecerliKelimeler
+                            ];
+                        }
+
+                        await this.firestoreListeKaydet(listeAdi);
+                        this.listeButonlariniGuncelle();
+                        this.kelimeGoster();
+
+                        this.showAlert(`${gecerliKelimeler.length} kelime başarıyla yüklendi!`, 'success');
+
+                    } catch (error) {
+                        console.error("JSON işleme hatası:", error);
+                        this.showAlert(`Hata: ${error.message}`, 'danger');
+                    }
+                };
+                reader.readAsText(file);
+            }
+
+            checkWordLimit() {
+                if (this.premium) return false;
+                const limitAsildi = this.getTotalWordCount() >= this.config.freeWordLimit;
+                this.elements.wordLimitAlert?.classList.toggle('d-none', !limitAsildi);
+                return limitAsildi;
+            }
+
+            getTotalWordCount() {
+                return Object.values(this.kelimeListeleri).reduce((sum, liste) => sum + liste.length, 0);
+            }
+
+            showAlert(message, type) {
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type} alert-dismissible fade show`;
+                alert.innerHTML = `${message}<button class="btn-close" data-bs-dismiss="alert"></button>`;
+                document.querySelector('.container').prepend(alert);
+                setTimeout(() => alert.remove(), 5000);
+            }
+
+            // QUIZ FONKSİYONLARI
+            initQuiz() {
+                this.elements.startQuizBtn?.addEventListener('click', () => this.startQuiz());
+                this.elements.nextQuestionBtn?.addEventListener('click', () => this.nextQuestion());
+                this.elements.endQuizBtn?.addEventListener('click', () => this.closeQuiz());
+            }
+
+            startQuiz() {
+                const kelimeler = this.aktifKelimeler();
+                if (kelimeler.length < 4) {
+                    this.showAlert('Quiz için en az 4 kelime olmalı!', 'warning');
+                    return;
+                }
+                
+                this.quizWords = this.shuffleArray([...kelimeler]);
+                this.currentQuizIndex = 0;
+                this.quizScore = 0;
+                this.quizTotal = Math.min(this.quizWords.length, 10);
+                this.showQuizModal();
+                this.showQuizQuestion();
+            }
+
+            showQuizModal() {
+                this.elements.quizModal.style.display = 'block';
+                this.elements.nextQuestionBtn.style.display = 'none';
+                this.elements.endQuizBtn.style.display = 'none';
+                this.elements.quizScore.textContent = '';
+            }
+
+            showQuizQuestion() {
+                if (this.currentQuizIndex >= this.quizTotal) {
+                    this.elements.quizQuestion.textContent = "Quiz Bitti!";
+                    this.elements.quizOptions.innerHTML = "";
+                    this.elements.quizScore.textContent = `Doğru: ${this.quizScore}/${this.quizTotal}`;
+                    this.elements.endQuizBtn.style.display = 'block';
+                    return;
+                }
+
+                const currentWord = this.quizWords[this.currentQuizIndex];
+                const correct = currentWord.meaning;
+                let options = [correct];
+                
+                while (options.length < 4) {
+                    const wrong = this.quizWords[Math.floor(Math.random() * this.quizWords.length)].meaning;
+                    if (!options.includes(wrong)) options.push(wrong);
+                }
+                
+                options = this.shuffleArray(options);
+
+                this.elements.quizQuestion.textContent = `"${currentWord.word}" (${currentWord.transliteration}) kelimesinin Türkçesi nedir?`;
+                this.elements.quizOptions.innerHTML = options.map(opt => 
+                    `<button class="quiz-option btn btn-outline-primary w-100 my-1">${opt}</button>`
+                ).join('');
+
+                Array.from(this.elements.quizOptions.getElementsByClassName('quiz-option')).forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        if (btn.textContent === correct) {
+                            this.quizScore++;
+                             btn.classList.remove('btn-outline-primary');
+                            btn.classList.add('btn-success');
+                        } else {
+                            btn.classList.remove('btn-outline-primary');
+                            btn.classList.add('btn-danger');
+                        }
+                        this.elements.nextQuestionBtn.style.display = 'block';
+                    });
+                });
+            }
+
+            nextQuestion() {
+                this.currentQuizIndex++;
+                this.showQuizQuestion();
+            }
+
+            closeQuiz() {
+                this.elements.quizModal.style.display = 'none';
+            }
+
+            shuffleArray(array) {
+                const newArray = [...array];
+                for (let i = newArray.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+                }
+                return newArray;
+            }
+
+            eventListenerlariAyarla() {
+                // Temalar
+                this.elements.themeButtons.forEach(btn => {
+                    btn.addEventListener('click', () => this.temaDegistir(btn.dataset.theme));
+                });
+
+                // Kelime navigasyon
+                this.elements.oncekiKelimeBtn?.addEventListener('click', () => this.oncekiKelime());
+                this.elements.sonrakiKelimeBtn?.addEventListener('click', () => this.sonrakiKelime());
+                this.elements.rastgeleKelimeBtn?.addEventListener('click', () => this.rastgeleKelime());
+
+                // Arama
+                this.elements.searchButton?.addEventListener('click', () => this.kelimeAra());
+                this.elements.searchInput?.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.kelimeAra();
+                });
+
+                // Liste yönetimi
+                this.elements.jsonFileInput?.addEventListener('change', (e) => {
+                    if (e.target.files.length) this.jsonDosyasiniIsle(e.target.files[0], false);
+                });
+
+                this.elements.mevcutListeyeEkleBtn?.addEventListener('click', () => {
+                    if (this.elements.jsonFileInput.files.length) {
+                        this.jsonDosyasiniIsle(this.elements.jsonFileInput.files[0], true);
+                    } else {
+                        this.showAlert('Lütfen önce bir dosya seçin', 'warning');
+                    }
+                });
+
+                this.elements.yeniListeEkleBtn?.addEventListener('click', () => {
+                    const listeAdi = prompt('Yeni liste adı girin:');
+                    if (listeAdi) {
+                        this.kelimeListeleri[listeAdi] = [];
+                        this.aktifListeAdi = listeAdi;
+                        this.firestoreListeKaydet(listeAdi);
+                        this.listeButonlariniGuncelle();
+                        this.kelimeGoster();
+                    }
+                });
+
+                this.elements.listeyiSilBtn?.addEventListener('click', () => {
+                    if (this.aktifListeAdi && confirm('Bu listeyi silmek istediğinize emin misiniz?')) {
+                        delete this.kelimeListeleri[this.aktifListeAdi];
+                        this.firestoreListeSil(this.aktifListeAdi);
+                        this.aktifListeAdi = Object.keys(this.kelimeListeleri)[0] || null;
+                        this.listeButonlariniGuncelle();
+                        this.kelimeGoster();
+                    }
+                });
+
+                // Premium
+                this.elements.premiumLoginBtn?.addEventListener('click', () => {
+                    if (this.elements.premiumPassword.value === this.config.premiumPassword) {
+                        this.premium = true;
+                        if (window.currentUser) {
+                            db.collection("users").doc(window.currentUser.uid).set({ premium: true }, { merge: true });
+                        }
+                        this.updatePremiumUI();
+                        this.showAlert('Premium üyeliğiniz aktif edildi!', 'success');
+                    } else {
+                        this.showAlert('Geçersiz premium şifre!', 'danger');
+                    }
+                });
+
+                this.elements.premiumLogoutBtn?.addEventListener('click', () => {
+                    this.premium = false;
+                    if (window.currentUser) {
+                        db.collection("users").doc(window.currentUser.uid).set({ premium: false }, { merge: true });
+                    }
+                    this.updatePremiumUI();
+                    this.showAlert('Premium üyeliğiniz sonlandırıldı', 'warning');
+                });
+
+                // Bilgi butonları
+                this.elements.biliyorumBtn?.addEventListener('click', () => {
+                    this.showAlert('Bu kelimeyi bildiğiniz işaretlendi', 'success');
+                });
+
+                this.elements.bilmiyorumBtn?.addEventListener('click', () => {
+                    this.showAlert('Bu kelimeyi bilmediğiniz işaretlendi', 'warning');
+                });
+            }
+        }
+
+        // Uygulamayı başlat
+        document.addEventListener('DOMContentLoaded', () => {
+            window.osmanlicaUygulamasi = new OsmanlicaUygulamasi();
+        });
     </script>
 </body>
 </html>
