@@ -27,7 +27,6 @@ class OsmanlicaUygulamasi {
             premiumBadge: document.getElementById('premiumBadge'),
             wordLimitAlert: document.getElementById('wordLimitAlert'),
             premiumStatusAlert: document.getElementById('premiumStatusAlert'),
-            // Arama fonksiyonu için yeni elementler
             searchInput: document.getElementById('searchInput'),
             searchButton: document.getElementById('searchButton')
         };
@@ -35,54 +34,65 @@ class OsmanlicaUygulamasi {
         this.kelimeListeleri = {};
         this.aktifListeAdi = null;
         this.suankiKelimeIndex = 0;
-        this.filteredKelimeler = []; // Filtrelenmiş kelimeler için
-        this.userStats = {
-            learnedWords: 0,
-            quizSuccess: 0,
-            hatStudies: 0
-        };
-        
+        this.filteredKelimeler = [];
+        this.premium = false;
+        this.firebaseReadyCalled = false;
+
         this.config = {
-            premiumPassword: "1234567890",
-            freeWordLimit: 100,
-            trialPeriodDays: 7,
-            contact: {
-                whatsappNumber: "905309082276",
-                supportEmail: "ozzasci@gmail.com",
-                companyName: "Osmanlıca Öğren"
-            },
-            pricing: {
-                monthly: 29.99,
-                yearly: 299.99
-            }
+            freeWordLimit: 100
         };
-        
+
         this.init();
     }
 
-    kullaniciVerileriniYukle() {
-        const kayitliVeriler = localStorage.getItem('userStats');
-        if (kayitliVeriler) {
-            try {
-                this.userStats = JSON.parse(kayitliVeriler);
-            } catch (error) {
-                console.error("Kullanıcı verileri yükleme hatası:", error);
-                this.userStats = {
-                    learnedWords: 0,
-                    quizSuccess: 0,
-                    hatStudies: 0
-                };
-            }
+    async init() {
+        this.temaYukle();
+        this.eventListenerlariAyarla();
+    }
+
+    async firebaseReady() {
+        if (window.currentUser) {
+            await this.loadUserPremium();
+            await this.firestoreListeleriYukle();
+        } else {
+            this.kelimeListeleri = {};
+            this.aktifListeAdi = null;
+            this.listeButonlariniGuncelle();
+            this.kelimeGoster();
+            this.premium = false;
         }
     }
 
-    init() {
-        this.temaYukle();
-        this.premiumYukle();
-        this.listeleriYukle();
-        this.kullaniciVerileriniYukle();
-        this.eventListenerlariAyarla();
+    async loadUserPremium() {
+        if (!window.currentUser) return;
+        const userDoc = await db.collection("users").doc(window.currentUser.uid).get();
+        this.premium = userDoc.exists && userDoc.data().premium;
+    }
+
+    async firestoreListeleriYukle() {
+        const user = window.currentUser;
+        if (!user) return;
+        const snapshot = await db.collection("users").doc(user.uid).collection("kelimeListeleri").get();
+        this.kelimeListeleri = {};
+        snapshot.forEach(doc => {
+            this.kelimeListeleri[doc.id] = doc.data().kelimeler || [];
+        });
+        this.aktifListeAdi = Object.keys(this.kelimeListeleri)[0] || null;
+        this.listeButonlariniGuncelle();
         this.kelimeGoster();
+    }
+
+    async firestoreListeKaydet(listeAdi) {
+        const user = window.currentUser;
+        if (!user) return;
+        const kelimeler = this.kelimeListeleri[listeAdi] || [];
+        await db.collection("users").doc(user.uid).collection("kelimeListeleri").doc(listeAdi).set({ kelimeler });
+    }
+
+    async firestoreListeSil(listeAdi) {
+        const user = window.currentUser;
+        if (!user) return;
+        await db.collection("users").doc(user.uid).collection("kelimeListeleri").doc(listeAdi).delete();
     }
 
     temaYukle() {
@@ -98,50 +108,6 @@ class OsmanlicaUygulamasi {
         localStorage.setItem('osmanlicaTheme', theme);
     }
 
-    premiumYukle() {
-        const premiumStatus = this.getPremiumStatus();
-        if (premiumStatus.isActive) {
-            this.elements.premiumBadge.classList.remove('d-none');
-            this.elements.premiumLoginForm.classList.add('d-none');
-            this.elements.premiumInfo.classList.remove('d-none');
-        }
-    }
-
-    getPremiumStatus() {
-        const isPremium = localStorage.getItem('osmanlicaPremium') === 'true';
-        if (!isPremium) return { isActive: false };
-        
-        const trialEndDate = localStorage.getItem('trialEndDate');
-        if (trialEndDate) {
-            const now = new Date();
-            const endDate = new Date(trialEndDate);
-            return {
-                isActive: now <= endDate,
-                isTrial: true,
-                remainingDays: Math.ceil((endDate - now) / (1000 * 60 * 60 * 24))
-            };
-        }
-        return { isActive: true, isTrial: false };
-    }
-
-    listeleriYukle() {
-        const kayitliListeler = localStorage.getItem('osmanlicaKelimeListeleri');
-        if (kayitliListeler) {
-            try {
-                this.kelimeListeleri = JSON.parse(kayitliListeler);
-                this.listeButonlariniGuncelle();
-                
-                const aktifListe = localStorage.getItem('aktifOsmanlicaListe');
-                if (aktifListe && this.kelimeListeleri[aktifListe]) {
-                    this.aktifListeDegistir(aktifListe);
-                }
-            } catch (error) {
-                console.error("Liste yükleme hatası:", error);
-                this.listeleriSifirla();
-            }
-        }
-    }
-
     listeButonlariniGuncelle() {
         this.elements.listeButonlari.innerHTML = '';
         Object.keys(this.kelimeListeleri).forEach(listeAdi => {
@@ -153,20 +119,10 @@ class OsmanlicaUygulamasi {
         });
     }
 
-    listeleriSifirla() {
-        this.kelimeListeleri = {};
-        this.aktifListeAdi = null;
-        localStorage.removeItem('osmanlicaKelimeListeleri');
-        localStorage.removeItem('aktifOsmanlicaListe');
-        this.listeButonlariniGuncelle();
-        this.kelimeGoster();
-    }
-
     aktifListeDegistir(listeAdi) {
         this.aktifListeAdi = listeAdi;
         this.suankiKelimeIndex = 0;
-        this.filteredKelimeler = []; // Liste değiştiğinde filtreyi temizle
-        localStorage.setItem('aktifOsmanlicaListe', listeAdi);
+        this.filteredKelimeler = [];
         this.listeButonlariniGuncelle();
         this.kelimeGoster();
     }
@@ -179,7 +135,7 @@ class OsmanlicaUygulamasi {
 
     kelimeGoster(isFiltered = false) {
         const kelimeler = isFiltered ? this.filteredKelimeler : this.aktifKelimeler();
-        
+
         if (kelimeler.length === 0) {
             this.elements.osmanlicaKelime.textContent = "---";
             this.elements.transliteration.textContent = "---";
@@ -187,20 +143,20 @@ class OsmanlicaUygulamasi {
             this.guncelleKelimeSayaci();
             return;
         }
-        
+
         const kelime = kelimeler[this.suankiKelimeIndex];
-        
+
         [this.elements.osmanlicaKelime, this.elements.transliteration, this.elements.meaning]
             .forEach(el => el.style.opacity = 0);
-        
+
         setTimeout(() => {
             this.elements.osmanlicaKelime.textContent = kelime.word || "---";
             this.elements.transliteration.textContent = kelime.transliteration || "---";
             this.elements.meaning.textContent = kelime.meaning || "---";
-            
+
             [this.elements.osmanlicaKelime, this.elements.transliteration, this.elements.meaning]
                 .forEach(el => el.style.opacity = 1);
-            
+
             this.guncelleKelimeSayaci();
         }, 200);
     }
@@ -228,17 +184,16 @@ class OsmanlicaUygulamasi {
     rastgeleKelime() {
         const kelimeler = this.aktifKelimeler();
         if (kelimeler.length < 2) return;
-        
+
         let yeniIndex;
         do {
             yeniIndex = Math.floor(Math.random() * kelimeler.length);
         } while (yeniIndex === this.suankiKelimeIndex);
-        
+
         this.suankiKelimeIndex = yeniIndex;
         this.kelimeGoster(this.filteredKelimeler.length > 0);
     }
 
-    // Yeni eklenen arama fonksiyonu
     kelimeAra() {
         const searchTerm = this.elements.searchInput.value.toLowerCase();
         if (!searchTerm) {
@@ -249,9 +204,9 @@ class OsmanlicaUygulamasi {
         }
 
         const kelimeler = this.aktifListeAdi ? this.kelimeListeleri[this.aktifListeAdi] || [] : [];
-        this.filteredKelimeler = kelimeler.filter(kelime => 
-            (kelime.word && kelime.word.toLowerCase().includes(searchTerm)) || 
-            (kelime.transliteration && kelime.transliteration.toLowerCase().includes(searchTerm)) || 
+        this.filteredKelimeler = kelimeler.filter(kelime =>
+            (kelime.word && kelime.word.toLowerCase().includes(searchTerm)) ||
+            (kelime.transliteration && kelime.transliteration.toLowerCase().includes(searchTerm)) ||
             (kelime.meaning && kelime.meaning.toLowerCase().includes(searchTerm))
         );
 
@@ -263,14 +218,14 @@ class OsmanlicaUygulamasi {
         }
     }
 
-    jsonDosyasiniIsle(file, mevcutListeyeEkle) {
+    async jsonDosyasiniIsle(file, mevcutListeyeEkle) {
         if (this.checkWordLimit()) {
             this.elements.premiumModal.show();
             return;
         }
 
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
             try {
                 const yeniKelimeler = JSON.parse(e.target.result);
                 if (!Array.isArray(yeniKelimeler)) throw new Error("Geçersiz JSON formatı");
@@ -278,21 +233,24 @@ class OsmanlicaUygulamasi {
                 const gecerliKelimeler = yeniKelimeler.filter(k => k?.word && k?.meaning);
                 if (!gecerliKelimeler.length) throw new Error("Geçerli kelime bulunamadı");
 
-                if (!mevcutListeyeEkle || !this.aktifListeAdi) {
-                    const listeAdi = file.name.replace('.json', '') || 'Yeni Liste';
+                let listeAdi = this.aktifListeAdi;
+                if (!mevcutListeyeEkle || !listeAdi) {
+                    listeAdi = file.name.replace('.json', '') || 'Yeni Liste';
                     this.kelimeListeleri[listeAdi] = gecerliKelimeler;
-                    this.aktifListeDegistir(listeAdi);
+                    this.aktifListeAdi = listeAdi;
                 } else {
-                    this.kelimeListeleri[this.aktifListeAdi] = [
-                        ...(this.kelimeListeleri[this.aktifListeAdi] || []),
+                    this.kelimeListeleri[listeAdi] = [
+                        ...(this.kelimeListeleri[listeAdi] || []),
                         ...gecerliKelimeler
                     ];
-                    this.aktifListeDegistir(this.aktifListeAdi);
                 }
-                
-                localStorage.setItem('osmanlicaKelimeListeleri', JSON.stringify(this.kelimeListeleri));
+
+                await this.firestoreListeKaydet(listeAdi);
+                this.listeButonlariniGuncelle();
+                this.kelimeGoster();
+
                 this.showAlert(`${gecerliKelimeler.length} kelime başarıyla yüklendi!`, 'success');
-                
+
             } catch (error) {
                 console.error("JSON işleme hatası:", error);
                 this.showAlert(`Hata: ${error.message}`, 'danger');
@@ -302,8 +260,8 @@ class OsmanlicaUygulamasi {
     }
 
     checkWordLimit() {
-        const limitAsildi = !this.getPremiumStatus().isActive && 
-                           this.getTotalWordCount() >= this.config.freeWordLimit;
+        if (this.premium) return false;
+        const limitAsildi = this.getTotalWordCount() >= this.config.freeWordLimit;
         this.elements.wordLimitAlert?.classList.toggle('d-none', !limitAsildi);
         return limitAsildi;
     }
@@ -335,31 +293,32 @@ class OsmanlicaUygulamasi {
         });
 
         this.elements.biliyorumBtn.addEventListener('click', () => {
-            this.userStats.learnedWords++;
-            localStorage.setItem('userStats', JSON.stringify(this.userStats));
             this.showAlert("Harika! Bu kelimeyi biliyorsunuz 🎉", "success");
             this.sonrakiKelime();
         });
 
-        this.elements.yeniListeEkleBtn.addEventListener('click', () => {
+        this.elements.yeniListeEkleBtn.addEventListener('click', async () => {
             const listeAdi = prompt("Yeni liste adı girin:");
             if (!listeAdi) return;
-            
+
             if (this.kelimeListeleri[listeAdi]) {
                 this.showAlert("Bu isimde liste zaten var!", "warning");
                 return;
             }
-            
+
             this.kelimeListeleri[listeAdi] = [];
-            this.aktifListeDegistir(listeAdi);
+            this.aktifListeAdi = listeAdi;
+            await this.firestoreListeKaydet(listeAdi);
+            this.listeButonlariniGuncelle();
+            this.kelimeGoster();
         });
 
-        this.elements.listeyiSilBtn.addEventListener('click', () => {
+        this.elements.listeyiSilBtn.addEventListener('click', async () => {
             if (!this.aktifListeAdi) return;
             if (confirm(`"${this.aktifListeAdi}" listesini silmek istediğinize emin misiniz?`)) {
+                await this.firestoreListeSil(this.aktifListeAdi);
                 delete this.kelimeListeleri[this.aktifListeAdi];
                 this.aktifListeAdi = Object.keys(this.kelimeListeleri)[0] || null;
-                localStorage.setItem('osmanlicaKelimeListeleri', JSON.stringify(this.kelimeListeleri));
                 this.listeButonlariniGuncelle();
                 this.kelimeGoster();
             }
@@ -381,38 +340,6 @@ class OsmanlicaUygulamasi {
             this.jsonDosyasiniIsle(this.elements.jsonFileInput.files[0], false);
         });
 
-        this.elements.premiumLoginBtn.addEventListener('click', () => {
-            const password = this.elements.premiumPassword.value;
-            if (password === this.config.premiumPassword) {
-                const trialEnd = new Date();
-                trialEnd.setDate(trialEnd.getDate() + this.config.trialPeriodDays);
-                
-                localStorage.setItem('osmanlicaPremium', 'true');
-                localStorage.setItem('trialEndDate', trialEnd.toISOString());
-                
-                this.elements.premiumBadge.classList.remove('d-none');
-                this.elements.premiumLoginForm.classList.add('d-none');
-                this.elements.premiumInfo.classList.remove('d-none');
-                this.elements.premiumModal.hide();
-                
-                this.showAlert(`7 günlük deneme başladı! Bitiş: ${trialEnd.toLocaleDateString()}`, 'success');
-            } else {
-                this.showAlert("Geçersiz şifre! Deneme şifresi: 1234567890", "danger");
-            }
-        });
-
-        this.elements.premiumLogoutBtn.addEventListener('click', () => {
-            if (confirm("Premium üyeliği sonlandırmak istediğinize emin misiniz?")) {
-                localStorage.removeItem('osmanlicaPremium');
-                localStorage.removeItem('trialEndDate');
-                this.elements.premiumBadge.classList.add('d-none');
-                this.elements.premiumLoginForm.classList.remove('d-none');
-                this.elements.premiumInfo.classList.add('d-none');
-                this.showAlert("Premium üyeliğiniz sonlandırıldı", "info");
-            }
-        });
-
-        // Arama fonksiyonu için event listener'lar
         this.elements.searchButton.addEventListener('click', () => this.kelimeAra());
         this.elements.searchInput.addEventListener('keyup', (e) => {
             if (e.key === 'Enter') this.kelimeAra();
@@ -421,5 +348,107 @@ class OsmanlicaUygulamasi {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    new OsmanlicaUygulamasi();
+    window.osmanlicaApp = new OsmanlicaUygulamasi();
 });
+
+// === QUIZ MODÜLÜ ===
+let quizWords = [];
+let currentQuizIndex = 0;
+let quizScore = 0;
+let quizTotal = 0;
+
+function closeQuizModal() {
+    document.getElementById('quizModal').style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const startQuizBtn = document.getElementById('startQuizBtn');
+    if (!startQuizBtn) return;
+
+    startQuizBtn.onclick = function() {
+        const app = window.osmanlicaApp;
+        const kelimeler = app.aktifKelimeler();
+        if (!kelimeler || kelimeler.length < 4) {
+            alert('Quiz için en az 4 kelime olmalı!');
+            return;
+        }
+        quizWords = shuffleArray([...kelimeler]);
+        currentQuizIndex = 0;
+        quizScore = 0;
+        quizTotal = Math.min(quizWords.length, 10);
+        showQuizModal();
+        showQuizQuestion();
+    };
+
+    const nextQuestionBtn = document.getElementById('nextQuestionBtn');
+    if (nextQuestionBtn) nextQuestionBtn.onclick = function() {
+        currentQuizIndex++;
+        showQuizQuestion();
+        this.style.display = 'none';
+    };
+    const endQuizBtn = document.getElementById('endQuizBtn');
+    if (endQuizBtn) endQuizBtn.onclick = closeQuizModal;
+});
+
+function showQuizModal() {
+    document.getElementById('quizModal').style.display = 'block';
+    document.getElementById('nextQuestionBtn').style.display = 'none';
+    document.getElementById('endQuizBtn').style.display = 'none';
+    document.getElementById('quizScore').innerText = '';
+}
+
+function showQuizQuestion() {
+    if (currentQuizIndex >= quizTotal) {
+        document.getElementById('quizQuestion').innerText = "Quiz Bitti!";
+        document.getElementById('quizOptions').innerHTML = "";
+        document.getElementById('quizScore').innerText = "Doğru: " + quizScore + "/" + quizTotal;
+        document.getElementById('endQuizBtn').style.display = 'block';
+        return;
+    }
+    const currentWord = quizWords[currentQuizIndex];
+    const correct = currentWord.meaning;
+    let options = [correct];
+    while (options.length < 4) {
+        const wrong = quizWords[Math.floor(Math.random() * quizWords.length)].meaning;
+        if (!options.includes(wrong)) options.push(wrong);
+    }
+    options = shuffleArray(options);
+
+    document.getElementById('quizQuestion').innerText = `"${currentWord.word}" (${currentWord.transliteration}) kelimesinin Türkçesi nedir?`;
+    document.getElementById('quizOptions').innerHTML = options.map(opt => 
+        `<button class="quiz-option btn btn-outline-primary w-100 my-1">${opt}</button>`
+    ).join('');
+
+    Array.from(document.getElementsByClassName('quiz-option')).forEach(btn => {
+        btn.onclick = function() {
+            if (btn.innerText === correct) {
+                quizScore++;
+                btn.classList.remove('btn-outline-primary');
+                btn.classList.add('btn-success');
+            } else {
+                btn.classList.remove('btn-outline-primary');
+                btn.classList.add('btn-danger');
+            }
+            Array.from(document.getElementsByClassName('quiz-option')).forEach(b => b.disabled = true);
+            document.getElementById('nextQuestionBtn').style.display = 'inline-block';
+        }
+    });
+}
+function sendEmail() {
+  const params = {
+    email: "alici@example.com",
+    message: "Bu bir test mesajıdır!",
+  };
+
+  emailjs.send("service_1avrv0q", "template_pc99ct6", params)
+    .then(() => alert("E-posta gönderildi!"))
+    .catch((error) => alert("Hata: " + error));
+}
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
