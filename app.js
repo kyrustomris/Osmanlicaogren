@@ -1,3 +1,19 @@
+// Firebase başlatma
+const firebaseConfig = {
+  apiKey: "AIzaSyBB-PEtapGv0S6B_Xt1A-6dTMjvO5ASrNc",
+  authDomain: "osmanlicaogren-57ff0.firebaseapp.com",
+  projectId: "osmanlicaogren-57ff0",
+  storageBucket: "osmanlicaogren-57ff0.firebasestorage.app",
+  messagingSenderId: "55078200434",
+  appId: "1:55078200434:web:f933fe5178daaf63210eeb",
+  measurementId: "G-58MD9BL1TY"
+};
+
+// Firebase'i başlat
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
 class OsmanlicaUygulamasi {
     constructor() {
         this.elements = {
@@ -28,7 +44,14 @@ class OsmanlicaUygulamasi {
             wordLimitAlert: document.getElementById('wordLimitAlert'),
             premiumStatusAlert: document.getElementById('premiumStatusAlert'),
             searchInput: document.getElementById('searchInput'),
-            searchButton: document.getElementById('searchButton')
+            searchButton: document.getElementById('searchButton'),
+            startQuizBtn: document.getElementById('startQuizBtn'),
+            quizModal: document.getElementById('quizModal'),
+            quizQuestion: document.getElementById('quizQuestion'),
+            quizOptions: document.getElementById('quizOptions'),
+            quizScore: document.getElementById('quizScore'),
+            nextQuestionBtn: document.getElementById('nextQuestionBtn'),
+            endQuizBtn: document.getElementById('endQuizBtn')
         };
 
         this.kelimeListeleri = {};
@@ -36,10 +59,16 @@ class OsmanlicaUygulamasi {
         this.suankiKelimeIndex = 0;
         this.filteredKelimeler = [];
         this.premium = false;
-        this.firebaseReadyCalled = false;
+
+        // Quiz değişkenleri
+        this.quizWords = [];
+        this.currentQuizIndex = 0;
+        this.quizScore = 0;
+        this.quizTotal = 0;
 
         this.config = {
-            freeWordLimit: 100
+            freeWordLimit: 100,
+            premiumPassword: "123456" // Gerçek uygulamada bu şekilde saklamayın
         };
 
         this.init();
@@ -47,7 +76,46 @@ class OsmanlicaUygulamasi {
 
     async init() {
         this.temaYukle();
+        this.initAuth();
         this.eventListenerlariAyarla();
+        this.initQuiz();
+    }
+
+    initAuth() {
+        auth.onAuthStateChanged(user => {
+            window.currentUser = user;
+            this.firebaseReady();
+            this.updateAuthUI();
+        });
+    }
+
+    updateAuthUI() {
+        const isLoggedIn = !!window.currentUser;
+        this.elements.premiumLoginForm.classList.toggle('d-none', isLoggedIn);
+        this.elements.premiumInfo.classList.toggle('d-none', !isLoggedIn);
+        this.elements.premiumBadge.classList.toggle('d-none', !isLoggedIn || !this.premium);
+    }
+
+    async login() {
+        const password = this.elements.premiumPassword.value;
+        try {
+            if (password === this.config.premiumPassword) {
+                this.premium = true;
+                this.elements.premiumModal.hide();
+                this.updateAuthUI();
+                this.showAlert("Premium erişim aktif!", "success");
+            } else {
+                throw new Error("Geçersiz şifre");
+            }
+        } catch (error) {
+            this.showAlert(`Giriş başarısız: ${error.message}`, "danger");
+        }
+    }
+
+    logout() {
+        this.premium = false;
+        this.updateAuthUI();
+        this.showAlert("Çıkış yapıldı", "info");
     }
 
     async firebaseReady() {
@@ -67,32 +135,51 @@ class OsmanlicaUygulamasi {
         if (!window.currentUser) return;
         const userDoc = await db.collection("users").doc(window.currentUser.uid).get();
         this.premium = userDoc.exists && userDoc.data().premium;
+        this.updateAuthUI();
     }
 
     async firestoreListeleriYukle() {
         const user = window.currentUser;
         if (!user) return;
-        const snapshot = await db.collection("users").doc(user.uid).collection("kelimeListeleri").get();
-        this.kelimeListeleri = {};
-        snapshot.forEach(doc => {
-            this.kelimeListeleri[doc.id] = doc.data().kelimeler || [];
-        });
-        this.aktifListeAdi = Object.keys(this.kelimeListeleri)[0] || null;
-        this.listeButonlariniGuncelle();
-        this.kelimeGoster();
+        
+        try {
+            const snapshot = await db.collection("users").doc(user.uid).collection("kelimeListeleri").get();
+            this.kelimeListeleri = {};
+            snapshot.forEach(doc => {
+                this.kelimeListeleri[doc.id] = doc.data().kelimeler || [];
+            });
+            this.aktifListeAdi = Object.keys(this.kelimeListeleri)[0] || null;
+            this.listeButonlariniGuncelle();
+            this.kelimeGoster();
+        } catch (error) {
+            console.error("Liste yükleme hatası:", error);
+            this.showAlert("Listeler yüklenirken hata oluştu", "danger");
+        }
     }
 
     async firestoreListeKaydet(listeAdi) {
         const user = window.currentUser;
         if (!user) return;
-        const kelimeler = this.kelimeListeleri[listeAdi] || [];
-        await db.collection("users").doc(user.uid).collection("kelimeListeleri").doc(listeAdi).set({ kelimeler });
+        
+        try {
+            const kelimeler = this.kelimeListeleri[listeAdi] || [];
+            await db.collection("users").doc(user.uid).collection("kelimeListeleri").doc(listeAdi).set({ kelimeler });
+        } catch (error) {
+            console.error("Liste kaydetme hatası:", error);
+            this.showAlert("Liste kaydedilirken hata oluştu", "danger");
+        }
     }
 
     async firestoreListeSil(listeAdi) {
         const user = window.currentUser;
         if (!user) return;
-        await db.collection("users").doc(user.uid).collection("kelimeListeleri").doc(listeAdi).delete();
+        
+        try {
+            await db.collection("users").doc(user.uid).collection("kelimeListeleri").doc(listeAdi).delete();
+        } catch (error) {
+            console.error("Liste silme hatası:", error);
+            this.showAlert("Liste silinirken hata oluştu", "danger");
+        }
     }
 
     temaYukle() {
@@ -104,8 +191,11 @@ class OsmanlicaUygulamasi {
     }
 
     temaDegistir(theme) {
-        document.body.className = `${theme}-theme`;
+        document.body.className = theme + '-theme';
         localStorage.setItem('osmanlicaTheme', theme);
+        this.elements.themeButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.theme === theme);
+        });
     }
 
     listeButonlariniGuncelle() {
@@ -114,7 +204,7 @@ class OsmanlicaUygulamasi {
             const btn = document.createElement('button');
             btn.className = `btn btn-sm ${listeAdi === this.aktifListeAdi ? 'btn-primary' : 'btn-outline-secondary'}`;
             btn.textContent = listeAdi;
-            btn.onclick = () => this.aktifListeDegistir(listeAdi);
+            btn.addEventListener('click', () => this.aktifListeDegistir(listeAdi));
             this.elements.listeButonlari.appendChild(btn);
         });
     }
@@ -278,15 +368,110 @@ class OsmanlicaUygulamasi {
         setTimeout(() => alert.remove(), 5000);
     }
 
+    // QUIZ FONKSİYONLARI
+    initQuiz() {
+        this.elements.startQuizBtn?.addEventListener('click', () => this.startQuiz());
+        this.elements.nextQuestionBtn?.addEventListener('click', () => this.nextQuestion());
+        this.elements.endQuizBtn?.addEventListener('click', () => this.closeQuiz());
+    }
+
+    startQuiz() {
+        const kelimeler = this.aktifKelimeler();
+        if (kelimeler.length < 4) {
+            this.showAlert('Quiz için en az 4 kelime olmalı!', 'warning');
+            return;
+        }
+        
+        this.quizWords = this.shuffleArray([...kelimeler]);
+        this.currentQuizIndex = 0;
+        this.quizScore = 0;
+        this.quizTotal = Math.min(this.quizWords.length, 10);
+        this.showQuizModal();
+        this.showQuizQuestion();
+    }
+
+    showQuizModal() {
+        this.elements.quizModal.style.display = 'block';
+        this.elements.nextQuestionBtn.style.display = 'none';
+        this.elements.endQuizBtn.style.display = 'none';
+        this.elements.quizScore.textContent = '';
+    }
+
+    showQuizQuestion() {
+        if (this.currentQuizIndex >= this.quizTotal) {
+            this.elements.quizQuestion.textContent = "Quiz Bitti!";
+            this.elements.quizOptions.innerHTML = "";
+            this.elements.quizScore.textContent = `Doğru: ${this.quizScore}/${this.quizTotal}`;
+            this.elements.endQuizBtn.style.display = 'block';
+            return;
+        }
+
+        const currentWord = this.quizWords[this.currentQuizIndex];
+        const correct = currentWord.meaning;
+        let options = [correct];
+        
+        while (options.length < 4) {
+            const wrong = this.quizWords[Math.floor(Math.random() * this.quizWords.length)].meaning;
+            if (!options.includes(wrong)) options.push(wrong);
+        }
+        
+        options = this.shuffleArray(options);
+
+        this.elements.quizQuestion.textContent = `"${currentWord.word}" (${currentWord.transliteration}) kelimesinin Türkçesi nedir?`;
+        this.elements.quizOptions.innerHTML = options.map(opt => 
+            `<button class="quiz-option btn btn-outline-primary w-100 my-1">${opt}</button>`
+        ).join('');
+
+        Array.from(this.elements.quizOptions.getElementsByClassName('quiz-option')).forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (btn.textContent === correct) {
+                    this.quizScore++;
+                    btn.classList.remove('btn-outline-primary');
+                    btn.classList.add('btn-success');
+                } else {
+                    btn.classList.remove('btn-outline-primary');
+                    btn.classList.add('btn-danger');
+                }
+                
+                Array.from(this.elements.quizOptions.getElementsByClassName('quiz-option')).forEach(b => {
+                    b.disabled = true;
+                });
+                
+                this.elements.nextQuestionBtn.style.display = 'inline-block';
+            });
+        });
+    }
+
+    nextQuestion() {
+        this.currentQuizIndex++;
+        this.showQuizQuestion();
+        this.elements.nextQuestionBtn.style.display = 'none';
+    }
+
+    closeQuiz() {
+        this.elements.quizModal.style.display = 'none';
+    }
+
+    shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
     eventListenerlariAyarla() {
+        // Temalar
         this.elements.themeButtons.forEach(btn => {
             btn.addEventListener('click', () => this.temaDegistir(btn.dataset.theme));
         });
 
+        // Kelime navigasyon
         this.elements.oncekiKelimeBtn.addEventListener('click', () => this.oncekiKelime());
         this.elements.sonrakiKelimeBtn.addEventListener('click', () => this.sonrakiKelime());
         this.elements.rastgeleKelimeBtn.addEventListener('click', () => this.rastgeleKelime());
 
+        // Öğrenme butonları
         this.elements.bilmiyorumBtn.addEventListener('click', () => {
             this.showAlert("Bu kelimeyi tekrar gözden geçirelim!", "info");
             this.sonrakiKelime();
@@ -297,6 +482,7 @@ class OsmanlicaUygulamasi {
             this.sonrakiKelime();
         });
 
+        // Liste yönetimi
         this.elements.yeniListeEkleBtn.addEventListener('click', async () => {
             const listeAdi = prompt("Yeni liste adı girin:");
             if (!listeAdi) return;
@@ -324,6 +510,7 @@ class OsmanlicaUygulamasi {
             }
         });
 
+        // JSON import
         this.elements.mevcutListeyeEkleBtn.addEventListener('click', () => {
             if (!this.elements.jsonFileInput.files[0]) {
                 this.showAlert("Lütfen JSON dosyası seçin!", "warning");
@@ -340,115 +527,19 @@ class OsmanlicaUygulamasi {
             this.jsonDosyasiniIsle(this.elements.jsonFileInput.files[0], false);
         });
 
+        // Arama
         this.elements.searchButton.addEventListener('click', () => this.kelimeAra());
         this.elements.searchInput.addEventListener('keyup', (e) => {
             if (e.key === 'Enter') this.kelimeAra();
         });
+
+        // Premium
+        this.elements.premiumLoginBtn.addEventListener('click', () => this.login());
+        this.elements.premiumLogoutBtn.addEventListener('click', () => this.logout());
     }
 }
 
+// Uygulamayı başlat
 document.addEventListener('DOMContentLoaded', () => {
     window.osmanlicaApp = new OsmanlicaUygulamasi();
 });
-
-// === QUIZ MODÜLÜ ===
-let quizWords = [];
-let currentQuizIndex = 0;
-let quizScore = 0;
-let quizTotal = 0;
-
-function closeQuizModal() {
-    document.getElementById('quizModal').style.display = 'none';
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    const startQuizBtn = document.getElementById('startQuizBtn');
-    if (!startQuizBtn) return;
-
-    startQuizBtn.onclick = function() {
-        const app = window.osmanlicaApp;
-        const kelimeler = app.aktifKelimeler();
-        if (!kelimeler || kelimeler.length < 4) {
-            alert('Quiz için en az 4 kelime olmalı!');
-            return;
-        }
-        quizWords = shuffleArray([...kelimeler]);
-        currentQuizIndex = 0;
-        quizScore = 0;
-        quizTotal = Math.min(quizWords.length, 10);
-        showQuizModal();
-        showQuizQuestion();
-    };
-
-    const nextQuestionBtn = document.getElementById('nextQuestionBtn');
-    if (nextQuestionBtn) nextQuestionBtn.onclick = function() {
-        currentQuizIndex++;
-        showQuizQuestion();
-        this.style.display = 'none';
-    };
-    const endQuizBtn = document.getElementById('endQuizBtn');
-    if (endQuizBtn) endQuizBtn.onclick = closeQuizModal;
-});
-
-function showQuizModal() {
-    document.getElementById('quizModal').style.display = 'block';
-    document.getElementById('nextQuestionBtn').style.display = 'none';
-    document.getElementById('endQuizBtn').style.display = 'none';
-    document.getElementById('quizScore').innerText = '';
-}
-
-function showQuizQuestion() {
-    if (currentQuizIndex >= quizTotal) {
-        document.getElementById('quizQuestion').innerText = "Quiz Bitti!";
-        document.getElementById('quizOptions').innerHTML = "";
-        document.getElementById('quizScore').innerText = "Doğru: " + quizScore + "/" + quizTotal;
-        document.getElementById('endQuizBtn').style.display = 'block';
-        return;
-    }
-    const currentWord = quizWords[currentQuizIndex];
-    const correct = currentWord.meaning;
-    let options = [correct];
-    while (options.length < 4) {
-        const wrong = quizWords[Math.floor(Math.random() * quizWords.length)].meaning;
-        if (!options.includes(wrong)) options.push(wrong);
-    }
-    options = shuffleArray(options);
-
-    document.getElementById('quizQuestion').innerText = `"${currentWord.word}" (${currentWord.transliteration}) kelimesinin Türkçesi nedir?`;
-    document.getElementById('quizOptions').innerHTML = options.map(opt => 
-        `<button class="quiz-option btn btn-outline-primary w-100 my-1">${opt}</button>`
-    ).join('');
-
-    Array.from(document.getElementsByClassName('quiz-option')).forEach(btn => {
-        btn.onclick = function() {
-            if (btn.innerText === correct) {
-                quizScore++;
-                btn.classList.remove('btn-outline-primary');
-                btn.classList.add('btn-success');
-            } else {
-                btn.classList.remove('btn-outline-primary');
-                btn.classList.add('btn-danger');
-            }
-            Array.from(document.getElementsByClassName('quiz-option')).forEach(b => b.disabled = true);
-            document.getElementById('nextQuestionBtn').style.display = 'inline-block';
-        }
-    });
-}
-function sendEmail() {
-  const params = {
-    email: "alici@example.com",
-    message: "Bu bir test mesajıdır!",
-  };
-
-  emailjs.send("service_1avrv0q", "template_pc99ct6", params)
-    .then(() => alert("E-posta gönderildi!"))
-    .catch((error) => alert("Hata: " + error));
-}
-
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
