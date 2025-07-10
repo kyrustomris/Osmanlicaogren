@@ -191,7 +191,37 @@
             </div>
         </div>
 
-       
+        <div class="modal fade" id="supportModal" tabindex="-1" aria-labelledby="supportModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="supportModalLabel"><i class="bi bi-heart-fill"></i> Destek Formu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="supportForm">
+                            <div class="mb-3">
+                                <label for="supportName" class="form-label">Adınız</label>
+                                <input type="text" class="form-control" id="supportName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="supportEmail" class="form-label">E-posta Adresiniz</label>
+                                <input type="email" class="form-control" id="supportEmail" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="supportMessage" class="form-label">Mesajınız</label>
+                                <textarea class="form-control" id="supportMessage" rows="4" required></textarea>
+                            </div>
+                            <div id="supportAlert" class="alert d-none"></div>
+                            <button type="submit" id="supportSubmitBtn" class="btn btn-primary w-100">
+                                <span id="supportSubmitText">Gönder</span>
+                                <span id="supportSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="d-flex justify-content-center gap-2 mb-4 flex-wrap">
             <button id="hatSanatiBtn" class="btn btn-warning nav-btn" title="Yazı sanatları">
@@ -328,7 +358,9 @@
             <a href="mailto:ozzasci@gmail.com" class="social-btn btn btn-danger" data-bs-toggle="tooltip" title="E-mail">
                 <i class="bi bi-envelope-fill"></i>
             </a>
-            
+            <a href="destek.html" id="supportBtn" class="social-btn btn support-btn" title="Destek Olun">
+    <i class="bi bi-heart-fill"></i>
+</a>
         </div>
 
         <div class="d-block d-md-none mt-3">
